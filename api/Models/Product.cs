@@ -12,5 +12,7 @@ public class Product
 
     public int StockQuantity { get; set; }
 
+    public string? ImageUrl { get; set; }  
+
     public List<OrderItem> OrderItems { get; set; } = new();
 }
