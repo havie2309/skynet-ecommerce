@@ -19,6 +19,10 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Index for product name searches
+        modelBuilder.Entity<Product>()
+            .HasIndex(p => p.Name);
+
         modelBuilder.Entity<Product>().HasData(
             new Product
             {
