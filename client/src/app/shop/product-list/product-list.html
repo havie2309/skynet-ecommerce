@@ -1,0 +1,39 @@
+<div class="container mt-4">
+
+  <!-- Search & Sort Bar -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <input class="form-control" placeholder="Search products..."
+             (input)="onSearch($any($event.target).value)" />
+    </div>
+    <div class="col-md-3 ms-auto">
+      <select class="form-select" (change)="onSort($any($event.target).value)">
+        <option value="">Sort by</option>
+        <option value="priceAsc">Price: Low to High</option>
+        <option value="priceDesc">Price: High to Low</option>
+        <option value="name">Name A–Z</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+    @for (p of products; track p.id) {
+      <div class="col">
+        <app-product-card [product]="p"></app-product-card>
+      </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-center mt-4">
+    <button class="btn btn-outline-secondary me-2"
+            [disabled]="pageIndex === 1"
+            (click)="onPageChange(pageIndex - 1)">← Prev</button>
+    <span class="align-self-center px-3">Page {{ pageIndex }}</span>
+    <button class="btn btn-outline-secondary ms-2"
+            [disabled]="pageIndex * pageSize >= totalCount"
+            (click)="onPageChange(pageIndex + 1)">Next →</button>
+  </div>
+
+</div>
