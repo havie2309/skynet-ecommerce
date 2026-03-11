@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 using Skinet.Api.Data;
 using Skinet.Api.Services;
 
@@ -17,6 +18,12 @@ builder.Services.AddSwaggerGen();
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Redis
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+    ConnectionMultiplexer.Connect(
+        builder.Configuration.GetConnectionString("Redis")!));
+builder.Services.AddScoped<BasketRepository>();
 
 // JWT Auth
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -52,7 +59,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("CorsPolicy");
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
