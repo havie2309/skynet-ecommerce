@@ -1,0 +1,13 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+  <a class="navbar-brand" routerLink="/shop">🛒 Skinet</a>
+  <div class="ms-auto d-flex align-items-center gap-3">
+    <a routerLink="/basket" class="btn btn-outline-light position-relative">
+      Basket
+      @if (basketService.itemCount() > 0) {
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {{ basketService.itemCount() }}
+        </span>
+      }
+    </a>
+  </div>
+</nav>

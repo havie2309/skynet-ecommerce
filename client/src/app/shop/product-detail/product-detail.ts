@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Product } from '../../models/product';
 import { ProductService } from '../../core/services/product';
+import { BasketService } from '../../core/services/basket';
 
 @Component({
   selector: 'app-product-detail',
@@ -15,8 +16,9 @@ export class ProductDetail implements OnInit {
   product?: Product;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private productService: ProductService,
+    private basketService: BasketService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -26,5 +28,9 @@ export class ProductDetail implements OnInit {
       this.product = p;
       this.cdr.detectChanges();
     });
+  }
+
+  addToBasket() {
+    if (this.product) this.basketService.addItemToBasket(this.product);
   }
 }

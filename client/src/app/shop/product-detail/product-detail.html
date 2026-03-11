@@ -10,7 +10,7 @@
         <h4 class="text-success">${{ product.price | number:'1.2-2' }}</h4>
         <p>{{ product.description }}</p>
         <p class="text-muted">Stock: {{ product.stockQuantity }}</p>
-        <button class="btn btn-dark btn-lg mt-3">Add to Basket</button>
+        <button class="btn btn-dark btn-lg mt-3" (click)="addToBasket()">Add to Basket</button>
         <a routerLink="/shop" class="btn btn-outline-secondary btn-lg mt-3 ms-2">← Back</a>
       </div>
     </div>
