@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './layout/navbar/navbar';
+import { AuthService } from './core/services/auth';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,10 @@ import { Navbar } from './layout/navbar/navbar';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {}
+export class App implements OnInit {
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authService.loadCurrentUser();
+  }
+}

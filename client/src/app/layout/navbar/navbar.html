@@ -1,6 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
   <a class="navbar-brand" routerLink="/shop">🛒 Skinet</a>
+
   <div class="ms-auto d-flex align-items-center gap-3">
+
+    <!-- Basket -->
     <a routerLink="/basket" class="btn btn-outline-light position-relative">
       Basket
       @if (basketService.itemCount() > 0) {
@@ -9,5 +12,17 @@
         </span>
       }
     </a>
+
+    <!-- Logged in -->
+    @if (authService.currentUser()) {
+      <span class="text-light">{{ authService.currentUser()!.email }}</span>
+      <button class="btn btn-outline-danger" (click)="authService.logout()">
+        Logout
+      </button>
+    } @else {
+      <a routerLink="/login" class="btn btn-outline-light">Login</a>
+      <a routerLink="/register" class="btn btn-light">Register</a>
+    }
+
   </div>
 </nav>
