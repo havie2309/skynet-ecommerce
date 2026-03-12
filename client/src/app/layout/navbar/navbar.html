@@ -15,6 +15,7 @@
 
     <!-- Logged in -->
     @if (authService.currentUser()) {
+      <a routerLink="/orders" class="btn btn-outline-light">My Orders</a>
       <span class="text-light">{{ authService.currentUser()!.email }}</span>
       <button class="btn btn-outline-danger" (click)="authService.logout()">
         Logout
@@ -23,6 +24,5 @@
       <a routerLink="/login" class="btn btn-outline-light">Login</a>
       <a routerLink="/register" class="btn btn-light">Register</a>
     }
-
   </div>
 </nav>

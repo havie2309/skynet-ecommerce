@@ -38,7 +38,11 @@
 
     <div class="text-end mt-3">
       <h4>Total: ${{ total | number:'1.2-2' }}</h4>
-      <button class="btn btn-dark btn-lg mt-2">Proceed to Checkout</button>
+      <button class="btn btn-dark btn-lg mt-2" 
+              (click)="placeOrder()" 
+              [disabled]="isPlacingOrder">
+        {{ isPlacingOrder ? 'Placing Order...' : 'Proceed to Checkout' }}
+      </button>
     </div>
   } @else {
     <div class="text-center mt-5">

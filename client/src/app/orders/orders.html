@@ -1,0 +1,37 @@
+<div class="container mt-4">
+  <h2 class="mb-4">📦 My Orders</h2>
+
+  @if (orders.length > 0) {
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Order #</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track order.id) {
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.createdAt | date:'mediumDate' }}</td>
+              <td>{{ order.items.length }} item(s)</td>
+              <td>${{ order.total | number:'1.2-2' }}</td>
+              <td>
+                <span class="badge bg-warning text-dark">{{ order.status }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="text-center mt-5">
+      <h4 class="text-muted">No orders yet</h4>
+      <a routerLink="/shop" class="btn btn-dark mt-3">Start Shopping</a>
+    </div>
+  }
+</div>
