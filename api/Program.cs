@@ -5,8 +5,19 @@ using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using Skinet.Api.Data;
 using Skinet.Api.Services;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<StripeSettings>(
+    builder.Configuration.GetSection("StripeSettings"));
+
+var stripeSettings = builder.Configuration
+    .GetSection("StripeSettings")
+    .Get<StripeSettings>();
+
+StripeConfiguration.ApiKey = stripeSettings?.SecretKey;
+
 
 // Controllers
 builder.Services.AddControllers();
@@ -44,7 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<Skinet.Api.Services.TokenService>();
 
 builder.Services.AddCors(opt =>
     opt.AddPolicy("CorsPolicy", policy =>
