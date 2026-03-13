@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Product } from '../../models/product';
@@ -20,10 +20,10 @@ export class ProductList implements OnInit {
   search = '';
   sort = '';
 
-  constructor(private productService: ProductService, private cdr: ChangeDetectorRef) {}
+  constructor(private productService: ProductService) {}
 
-  ngOnInit() { 
-    this.loadProducts(); 
+  ngOnInit() {
+    this.loadProducts();
   }
 
   loadProducts() {
@@ -32,7 +32,6 @@ export class ProductList implements OnInit {
         next: res => {
           this.products = [...res.data];
           this.totalCount = res.totalCount;
-          this.cdr.detectChanges();
         },
         error: err => console.error('API error:', err)
       });

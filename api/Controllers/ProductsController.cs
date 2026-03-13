@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Skinet.Api.Data;
 using Skinet.Api.DTOs;
+using Skinet.Api.Models;
 
 namespace Skinet.Api.Controllers;
 
@@ -16,7 +18,6 @@ public class ProductsController : ControllerBase
         _context = context;
     }
 
-    // GET /api/products?search=lap&minPrice=100&maxPrice=2000&page=1&pageSize=10
     [HttpGet]
     public async Task<ActionResult<object>> GetProducts(
         [FromQuery] string? search,
@@ -27,20 +28,16 @@ public class ProductsController : ControllerBase
     {
         var query = _context.Products.AsQueryable();
 
-        // Filter by search term (name or description)
         if (!string.IsNullOrWhiteSpace(search))
             query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
 
-        // Filter by price range
         if (minPrice.HasValue)
             query = query.Where(p => p.Price >= minPrice.Value);
         if (maxPrice.HasValue)
             query = query.Where(p => p.Price <= maxPrice.Value);
 
-        // Get total count before pagination (for frontend to know total pages)
         var totalCount = await query.CountAsync();
 
-        // Apply pagination
         var products = await query
             .OrderBy(p => p.Name)
             .Skip((page - 1) * pageSize)
@@ -57,7 +54,6 @@ public class ProductsController : ControllerBase
         });
     }
 
-    // GET /api/products/5
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
@@ -69,5 +65,73 @@ public class ProductsController : ControllerBase
         if (product == null) return NotFound();
 
         return Ok(product);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<ActionResult<ProductDto>> CreateProduct(ProductDto dto)
+    {
+        var product = new Product
+        {
+            Name = dto.Name,
+            Description = dto.Description,
+            Price = dto.Price,
+            StockQuantity = dto.StockQuantity,
+            ImageUrl = dto.ImageUrl
+        };
+
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+
+        var result = new ProductDto(
+            product.Id,
+            product.Name,
+            product.Description,
+            product.Price,
+            product.StockQuantity,
+            product.ImageUrl
+        );
+
+        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, result);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ProductDto>> UpdateProduct(int id, ProductDto dto)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null) return NotFound();
+
+        product.Name = dto.Name;
+        product.Description = dto.Description;
+        product.Price = dto.Price;
+        product.StockQuantity = dto.StockQuantity;
+        product.ImageUrl = dto.ImageUrl;
+
+        await _context.SaveChangesAsync();
+
+        var result = new ProductDto(
+            product.Id,
+            product.Name,
+            product.Description,
+            product.Price,
+            product.StockQuantity,
+            product.ImageUrl
+        );
+
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteProduct(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null) return NotFound();
+
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
     }
 }

@@ -30,7 +30,7 @@ public class AccountController : ControllerBase
         {
             Email = dto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Role = "Admin"
+            Role = "User"
         };
 
         _context.Users.Add(user);
@@ -39,4 +39,13 @@ public class AccountController : ControllerBase
         return Ok(new AuthResponseDto(_tokenService.CreateToken(user), user.Email, user.Role));
     }
 
+    [HttpPost("login")]
+    public async Task<ActionResult<AuthResponseDto>> Login(LoginDto dto)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            return Unauthorized("Invalid credentials");
+
+        return Ok(new AuthResponseDto(_tokenService.CreateToken(user), user.Email, user.Role));
+    }
 }

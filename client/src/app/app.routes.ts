@@ -8,6 +8,9 @@ import { Register } from './auth/register/register';
 import { OrderConfirmation } from './order-confirmation/order-confirmation';
 import { Orders } from './orders/orders';
 import { authGuard } from './core/services/guards/auth.guard';
+import { AdminProducts } from './admin/admin-products';
+import { AdminProductForm } from './admin/admin-product-form';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'shop', pathMatch: 'full' },
@@ -18,5 +21,8 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: 'order-confirmation/:id', component: OrderConfirmation, canActivate: [authGuard] },
-  { path: 'orders', component: Orders, canActivate: [authGuard] }
+  { path: 'orders', component: Orders, canActivate: [authGuard] },
+  { path: 'admin/products/new', component: AdminProductForm, canActivate: [authGuard] },
+  { path: 'admin/products/edit/:id', component: AdminProductForm, canActivate: [authGuard] },
+  { path: 'admin/products', component: AdminProducts, canActivate: [authGuard] }
 ];
