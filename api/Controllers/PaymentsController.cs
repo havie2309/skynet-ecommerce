@@ -1,15 +1,14 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using Stripe;
-using System.Text.Json;
 using Skinet.Api.Data;
 using Skinet.Api.DTOs;
 using Skinet.Api.Models;
-using Microsoft.Extensions.Options;
 using Skinet.Api.Services;
-
 
 namespace Skinet.Api.Controllers;
 
@@ -32,6 +31,13 @@ public class PaymentsController : ControllerBase
         _stripeSettings = stripeOptions.Value;
     }
 
+    [HttpGet("publishable-key")]
+    [AllowAnonymous]
+    public ActionResult GetPublishableKey()
+    {
+        return Ok(new { publishableKey = _stripeSettings.PublishableKey });
+    }
+
     [HttpPost("create-payment-intent")]
     public async Task<ActionResult<PaymentIntentResponseDto>> CreatePaymentIntent(CreatePaymentIntentDto dto)
     {
@@ -43,7 +49,7 @@ public class PaymentsController : ControllerBase
 
         var basket = JsonSerializer.Deserialize<CustomerBasket>(basketJson!);
 
-        if (basket == null || basket.Items.Count == 0)
+        if (basket == null || basket.Items == null || basket.Items.Count == 0)
             return BadRequest("Basket is empty");
 
         decimal total = 0;
@@ -58,6 +64,8 @@ public class PaymentsController : ControllerBase
             total += product.Price * item.Quantity;
         }
 
+        StripeConfiguration.ApiKey = _stripeSettings.SecretKey;  // <-- FIXED
+
         var service = new PaymentIntentService();
         var options = new PaymentIntentCreateOptions
         {
@@ -70,12 +78,4 @@ public class PaymentsController : ControllerBase
 
         return Ok(new PaymentIntentResponseDto(paymentIntent.ClientSecret));
     }
-    
-    [HttpGet("publishable-key")]
-    [AllowAnonymous]
-    public ActionResult GetPublishableKey()
-    {
-        return Ok(new { publishableKey = _stripeSettings.PublishableKey });
-    }
-
 }

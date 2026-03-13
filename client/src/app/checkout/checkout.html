@@ -1,0 +1,16 @@
+<div class="container mt-5" style="max-width: 600px;">
+  <h2>Checkout</h2>
+
+  <div class="card p-4 mt-4">
+    <label class="form-label">Card Details</label>
+    <div #cardElement class="form-control p-3"></div>
+
+    @if (error) {
+      <div class="text-danger mt-3">{{ error }}</div>
+    }
+
+    <button class="btn btn-dark mt-4" [disabled]="loading" (click)="pay()">
+      {{ loading ? 'Processing Payment...' : 'Pay Now' }}
+    </button>
+  </div>
+</div>
