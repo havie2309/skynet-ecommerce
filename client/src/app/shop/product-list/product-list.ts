@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Product, ProductFilters, ProductQueryParams } from '../../models/product';
 import { ProductService } from '../../core/services/product';
 import { ProductCard } from '../product-card/product-card';
@@ -32,11 +32,29 @@ export class ProductList implements OnInit {
     sort: ''
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadFilters();
-    this.loadProducts();
+
+    this.route.queryParams.subscribe(params => {
+      this.queryParams = {
+        pageIndex: params['page'] ? +params['page'] : 1,
+        pageSize: params['pageSize'] ? +params['pageSize'] : 8,
+        search: params['search'] ?? '',
+        brand: params['brand'] ?? '',
+        category: params['category'] ?? '',
+        minPrice: params['minPrice'] ? +params['minPrice'] : null,
+        maxPrice: params['maxPrice'] ? +params['maxPrice'] : null,
+        sort: params['sort'] ?? ''
+      };
+
+      this.loadProducts();
+    });
   }
 
   loadFilters() {
@@ -49,55 +67,71 @@ export class ProductList implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProducts(this.queryParams)
-      .subscribe({
-        next: res => {
-          this.products = [...res.data];
-          this.totalCount = res.totalCount;
-        },
-        error: err => console.error('API error:', err)
-      });
+    this.productService.getProducts(this.queryParams).subscribe({
+      next: res => {
+        this.products = [...res.data];
+        this.totalCount = res.totalCount;
+      },
+      error: err => console.error('API error:', err)
+    });
+  }
+
+  updateUrl(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        page: this.queryParams.pageIndex,
+        pageSize: this.queryParams.pageSize,
+        search: this.queryParams.search || null,
+        brand: this.queryParams.brand || null,
+        category: this.queryParams.category || null,
+        minPrice: this.queryParams.minPrice,
+        maxPrice: this.queryParams.maxPrice,
+        sort: this.queryParams.sort || null
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   onSearch(term: string) {
     this.queryParams.search = term;
     this.queryParams.pageIndex = 1;
-    this.loadProducts();
+    this.updateUrl();
   }
 
   onSort(val: string) {
     this.queryParams.sort = val;
     this.queryParams.pageIndex = 1;
-    this.loadProducts();
+    this.updateUrl();
   }
 
   onBrandChange(val: string) {
     this.queryParams.brand = val;
     this.queryParams.pageIndex = 1;
-    this.loadProducts();
+    this.updateUrl();
   }
 
   onCategoryChange(val: string) {
     this.queryParams.category = val;
     this.queryParams.pageIndex = 1;
-    this.loadProducts();
+    this.updateUrl();
   }
 
   onMinPriceChange(val: string) {
     this.queryParams.minPrice = val ? Number(val) : null;
     this.queryParams.pageIndex = 1;
-    this.loadProducts();
+    this.updateUrl();
   }
 
   onMaxPriceChange(val: string) {
     this.queryParams.maxPrice = val ? Number(val) : null;
     this.queryParams.pageIndex = 1;
-    this.loadProducts();
+    this.updateUrl();
   }
 
   onPageChange(p: number) {
     this.queryParams.pageIndex = p;
-    this.loadProducts();
+    this.updateUrl();
   }
 
   clearFilters() {
@@ -111,6 +145,6 @@ export class ProductList implements OnInit {
       maxPrice: null,
       sort: ''
     };
-    this.loadProducts();
+    this.updateUrl();
   }
 }
