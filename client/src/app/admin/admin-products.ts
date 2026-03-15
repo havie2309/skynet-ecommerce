@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ProductService } from '../core/services/product';
-import { Product } from '../models/product';
+import { Product, ProductQueryParams } from '../models/product';
 
 @Component({
   selector: 'app-admin-products',
@@ -15,7 +15,21 @@ export class AdminProducts implements OnInit {
   loading = false;
   error = '';
 
-  constructor(private productService: ProductService) {}
+  queryParams: ProductQueryParams = {
+    pageIndex: 1,
+    pageSize: 100,
+    search: '',
+    brand: '',
+    category: '',
+    minPrice: null,
+    maxPrice: null,
+    sort: ''
+  };
+
+  constructor(
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -24,15 +38,18 @@ export class AdminProducts implements OnInit {
   loadProducts(): void {
     this.loading = true;
     this.error = '';
+    this.cdr.detectChanges();
 
-    this.productService.getProducts(1, 100).subscribe({
+    this.productService.getProducts(this.queryParams).subscribe({
       next: response => {
-        this.products = response.data;  // lowercase
+        this.products = response.data;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Failed to load products';
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -43,9 +60,11 @@ export class AdminProducts implements OnInit {
     this.productService.deleteProduct(id).subscribe({
       next: () => {
         this.products = this.products.filter(p => p.id !== id);
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Failed to delete product';
+        this.cdr.detectChanges();
       }
     });
   }

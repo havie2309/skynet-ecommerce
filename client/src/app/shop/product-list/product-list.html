@@ -1,19 +1,87 @@
 <div class="container mt-4">
 
-  <!-- Search & Sort Bar -->
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <input class="form-control" placeholder="Search products..."
-             (input)="onSearch($any($event.target).value)" />
+  <!-- Search / Sort / Filters -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <input
+        class="form-control"
+        placeholder="Search products..."
+        [value]="queryParams.search"
+        (input)="onSearch($any($event.target).value)" />
     </div>
-    <div class="col-md-3 ms-auto">
-      <select class="form-select" (change)="onSort($any($event.target).value)">
-        <option value="">Sort by</option>
-        <option value="priceAsc">Price: Low to High</option>
-        <option value="priceDesc">Price: High to Low</option>
-        <option value="name">Name A–Z</option>
+
+    <div class="col-md-2">
+      <select class="form-select" (change)="onBrandChange($any($event.target).value)">
+        <option value="">All Brands</option>
+        @for (brand of filters.brands; track brand) {
+          <option [value]="brand" [selected]="queryParams.brand === brand">{{ brand }}</option>
+        }
       </select>
     </div>
+
+    <div class="col-md-2">
+      <select class="form-select" (change)="onCategoryChange($any($event.target).value)">
+        <option value="">All Categories</option>
+        @for (category of filters.categories; track category) {
+          <option [value]="category" [selected]="queryParams.category === category">{{ category }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Min Price"
+        [value]="queryParams.minPrice ?? ''"
+        (input)="onMinPriceChange($any($event.target).value)" />
+    </div>
+
+    <div class="col-md-2">
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Max Price"
+        [value]="queryParams.maxPrice ?? ''"
+        (input)="onMaxPriceChange($any($event.target).value)" />
+    </div>
+
+    <div class="col-md-3">
+      <select class="form-select" (change)="onSort($any($event.target).value)">
+        <option value="">Sort by</option>
+        <option value="priceAsc" [selected]="queryParams.sort === 'priceAsc'">Price: Low to High</option>
+        <option value="priceDesc" [selected]="queryParams.sort === 'priceDesc'">Price: High to Low</option>
+        <option value="name" [selected]="queryParams.sort === 'name'">Name A-Z</option>
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <button class="btn btn-outline-dark w-100" (click)="clearFilters()">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Active Filter Chips -->
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    @if (queryParams.search) {
+      <span class="badge text-bg-dark">Search: {{ queryParams.search }}</span>
+    }
+    @if (queryParams.brand) {
+      <span class="badge text-bg-primary">Brand: {{ queryParams.brand }}</span>
+    }
+    @if (queryParams.category) {
+      <span class="badge text-bg-success">Category: {{ queryParams.category }}</span>
+    }
+    @if (queryParams.minPrice !== null) {
+      <span class="badge text-bg-warning">Min: ${{ queryParams.minPrice }}</span>
+    }
+    @if (queryParams.maxPrice !== null) {
+      <span class="badge text-bg-warning">Max: ${{ queryParams.maxPrice }}</span>
+    }
+    @if (queryParams.sort) {
+      <span class="badge text-bg-secondary">Sort: {{ queryParams.sort }}</span>
+    }
   </div>
 
   <!-- Product Grid -->
@@ -27,13 +95,21 @@
 
   <!-- Pagination -->
   <div class="d-flex justify-content-center mt-4">
-    <button class="btn btn-outline-secondary me-2"
-            [disabled]="pageIndex === 1"
-            (click)="onPageChange(pageIndex - 1)">← Prev</button>
-    <span class="align-self-center px-3">Page {{ pageIndex }}</span>
-    <button class="btn btn-outline-secondary ms-2"
-            [disabled]="pageIndex * pageSize >= totalCount"
-            (click)="onPageChange(pageIndex + 1)">Next →</button>
+    <button
+      class="btn btn-outline-secondary me-2"
+      [disabled]="queryParams.pageIndex === 1"
+      (click)="onPageChange(queryParams.pageIndex - 1)">
+      ← Prev
+    </button>
+
+    <span class="align-self-center px-3">Page {{ queryParams.pageIndex }}</span>
+
+    <button
+      class="btn btn-outline-secondary ms-2"
+      [disabled]="queryParams.pageIndex * queryParams.pageSize >= totalCount"
+      (click)="onPageChange(queryParams.pageIndex + 1)">
+      Next →
+    </button>
   </div>
 
 </div>

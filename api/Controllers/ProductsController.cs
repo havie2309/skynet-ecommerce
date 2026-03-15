@@ -21,6 +21,8 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<object>> GetProducts(
         [FromQuery] string? search,
+        [FromQuery] string? brand,
+        [FromQuery] string? category,
         [FromQuery] decimal? minPrice,
         [FromQuery] decimal? maxPrice,
         [FromQuery] int page = 1,
@@ -31,8 +33,15 @@ public class ProductsController : ControllerBase
         if (!string.IsNullOrWhiteSpace(search))
             query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
 
+        if (!string.IsNullOrWhiteSpace(brand))
+            query = query.Where(p => p.Brand == brand);
+
+        if (!string.IsNullOrWhiteSpace(category))
+            query = query.Where(p => p.Category == category);
+
         if (minPrice.HasValue)
             query = query.Where(p => p.Price >= minPrice.Value);
+
         if (maxPrice.HasValue)
             query = query.Where(p => p.Price <= maxPrice.Value);
 
@@ -51,6 +60,30 @@ public class ProductsController : ControllerBase
             Page = page,
             PageSize = pageSize,
             Data = products
+        });
+    }
+
+    [HttpGet("filters")]
+    public async Task<ActionResult<object>> GetFilters()
+    {
+        var brands = await _context.Products
+            .Select(p => p.Brand)
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .Distinct()
+            .OrderBy(b => b)
+            .ToListAsync();
+
+        var categories = await _context.Products
+            .Select(p => p.Category)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct()
+            .OrderBy(c => c)
+            .ToListAsync();
+
+        return Ok(new
+        {
+            Brands = brands,
+            Categories = categories
         });
     }
 

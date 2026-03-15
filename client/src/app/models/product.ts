@@ -13,3 +13,19 @@ export interface Pagination<T> {
   totalCount: number;
   data: T[];
 }
+
+export interface ProductFilters {
+  brands: string[];
+  categories: string[];
+}
+
+export interface ProductQueryParams {
+  pageIndex: number;
+  pageSize: number;
+  search: string;
+  brand: string;
+  category: string;
+  minPrice: number | null;
+  maxPrice: number | null;
+  sort: string;
+}

@@ -15,4 +15,9 @@ public class Product
     public string? ImageUrl { get; set; }  
 
     public List<OrderItem> OrderItems { get; set; } = new();
+
+    public string Brand { get; set; } = string.Empty;
+    
+    public string Category { get; set; } = string.Empty;
+
 }
