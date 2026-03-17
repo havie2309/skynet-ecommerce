@@ -26,12 +26,10 @@ public class OrdersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<OrderResponseDto>> PlaceOrder(PlaceOrderDto dto)
     {
-        // 1. Get logged-in user from JWT
         var email = User.FindFirstValue(ClaimTypes.Email);
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         if (user == null) return Unauthorized();
 
-        // 2. Create order items
         var orderItems = dto.Items.Select(i => new OrderItem
         {
             ProductId = i.ProductId,
@@ -39,26 +37,24 @@ public class OrdersController : ControllerBase
             Quantity = i.Quantity
         }).ToList();
 
-        // 3. Create order
         var order = new Order
         {
             UserId = user.Id,
             CreatedAt = DateTime.UtcNow,
+            Status = "Pending",
             OrderItems = orderItems
         };
 
-        // 4. Save to PostgreSQL
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
 
-        // 5. Clear Redis basket
         await _basketRepo.DeleteBasketAsync(dto.BasketId);
 
-        // 6. Return response
         var total = orderItems.Sum(i => i.PriceAtPurchase * i.Quantity);
+
         return Ok(new OrderResponseDto(
             order.Id,
-            "Pending",
+            order.Status,
             total,
             order.CreatedAt,
             dto.Items
@@ -80,11 +76,40 @@ public class OrdersController : ControllerBase
 
         return Ok(orders.Select(o => new OrderResponseDto(
             o.Id,
-            "Pending",
+            o.Status,
             o.OrderItems.Sum(i => i.PriceAtPurchase * i.Quantity),
             o.CreatedAt,
             o.OrderItems.Select(i => new OrderItemDto(
                 i.ProductId, "", i.PriceAtPurchase, i.Quantity)).ToList()
         )));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderResponseDto>> GetOrderById(int id)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null) return Unauthorized();
+
+        var order = await _context.Orders
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
+
+        if (order == null) return NotFound();
+
+        var total = order.OrderItems.Sum(i => i.PriceAtPurchase * i.Quantity);
+
+        return Ok(new OrderResponseDto(
+            order.Id,
+            order.Status,
+            total,
+            order.CreatedAt,
+            order.OrderItems.Select(i => new OrderItemDto(
+                i.ProductId,
+                "",
+                i.PriceAtPurchase,
+                i.Quantity
+            )).ToList()
+        ));
     }
 }

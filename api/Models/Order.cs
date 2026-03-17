@@ -9,5 +9,7 @@ public class Order
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public string Status { get; set; } = "Pending";
+
     public List<OrderItem> OrderItems { get; set; } = new();
 }

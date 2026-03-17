@@ -11,6 +11,7 @@
             <th>Items</th>
             <th>Total</th>
             <th>Status</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -22,6 +23,11 @@
               <td>${{ order.total | number:'1.2-2' }}</td>
               <td>
                 <span class="badge bg-warning text-dark">{{ order.status }}</span>
+              </td>
+              <td>
+                <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-outline-dark">
+                  View Details
+                </a>
               </td>
             </tr>
           }

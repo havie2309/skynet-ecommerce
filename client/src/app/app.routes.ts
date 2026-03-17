@@ -9,7 +9,10 @@ import { OrderConfirmation } from './order-confirmation/order-confirmation';
 import { Orders } from './orders/orders';
 import { authGuard } from './core/services/guards/auth.guard';
 import { AdminProducts } from './admin/admin-products';
-import { AdminProductForm } from './admin/admin-product-form';
+import { AdminProductForm } from './admin/admin-product-form'; 
+import { OrderDetail } from './core/services/order-detail/order-detail';
+import { Profile } from './profile/profile';
+
 
 
 export const routes: Routes = [
@@ -22,7 +25,9 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'order-confirmation/:id', component: OrderConfirmation, canActivate: [authGuard] },
   { path: 'orders', component: Orders, canActivate: [authGuard] },
+  { path: 'orders/:id', component: OrderDetail, canActivate: [authGuard] },
   { path: 'admin/products/new', component: AdminProductForm, canActivate: [authGuard] },
   { path: 'admin/products/edit/:id', component: AdminProductForm, canActivate: [authGuard] },
-  { path: 'admin/products', component: AdminProducts, canActivate: [authGuard] }
+  { path: 'admin/products', component: AdminProducts, canActivate: [authGuard] },
+  { path: 'profile', component: Profile, canActivate: [authGuard] },
 ];

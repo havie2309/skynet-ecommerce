@@ -39,10 +39,19 @@ export class AuthService {
   loadCurrentUser() {
     const token = localStorage.getItem('token');
     if (!token) return;
-    // Decode email from token payload
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      this.currentUser.set({ token, email: payload.email, role: payload.role });
+
+      const email =
+        payload.email ??
+        payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+
+      const role =
+        payload.role ??
+        payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+      this.currentUser.set({ token, email, role });
     } catch {
       this.logout();
     }
