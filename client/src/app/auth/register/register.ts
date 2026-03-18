@@ -15,11 +15,19 @@ export class Register {
   email = '';
   password = '';
   errorMessage = '';
+  passwordHint = 'Use at least 8 characters with uppercase, lowercase, and a number.';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
     this.errorMessage = '';
+
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordPattern.test(this.password)) {
+      this.errorMessage = this.passwordHint;
+      return;
+    }
+
     this.authService.register({ email: this.email, password: this.password })
       .subscribe({
         next: () => this.router.navigate(['/shop']),
