@@ -22,7 +22,9 @@
               <td>{{ order.items.length }} item(s)</td>
               <td>${{ order.total | number:'1.2-2' }}</td>
               <td>
-                <span class="badge bg-warning text-dark">{{ order.status }}</span>
+                <span class="badge bg-transparent" [ngClass]="getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
               </td>
               <td>
                 <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-outline-dark">

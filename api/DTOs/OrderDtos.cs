@@ -11,3 +11,5 @@ public record OrderResponseDto(
     DateTime CreatedAt,
     List<OrderItemDto> Items
 );
+
+public record UpdateOrderStatusDto(string Status);

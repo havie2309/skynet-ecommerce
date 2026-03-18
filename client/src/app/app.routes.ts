@@ -12,6 +12,7 @@ import { AdminProducts } from './admin/admin-products';
 import { AdminProductForm } from './admin/admin-product-form'; 
 import { OrderDetail } from './core/services/order-detail/order-detail';
 import { Profile } from './profile/profile';
+import { AdminOrders } from './admin/admin-orders';
 
 
 
@@ -29,5 +30,6 @@ export const routes: Routes = [
   { path: 'admin/products/new', component: AdminProductForm, canActivate: [authGuard] },
   { path: 'admin/products/edit/:id', component: AdminProductForm, canActivate: [authGuard] },
   { path: 'admin/products', component: AdminProducts, canActivate: [authGuard] },
+  { path: 'admin/orders', component: AdminOrders, canActivate: [authGuard] },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
 ];

@@ -40,6 +40,23 @@ export class OrderDetail implements OnInit {
   }
 
   get total(): number {
-    return this.order?.items.reduce((sum: number, item: OrderItem ) => sum + item.price * item.quantity, 0) ?? 0;
+    return this.order?.items.reduce((sum: number, item: OrderItem) => sum + item.price * item.quantity, 0) ?? 0;
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'border border-warning text-warning';
+      case 'Paid':
+        return 'border border-primary text-primary';
+      case 'Shipped':
+        return 'border border-info text-info';
+      case 'Delivered':
+        return 'border border-success text-success';
+      case 'Cancelled':
+        return 'border border-danger text-danger';
+      default:
+        return 'border border-secondary text-secondary';
+    }
   }
 }

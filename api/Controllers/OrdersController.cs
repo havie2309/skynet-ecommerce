@@ -112,4 +112,54 @@ public class OrdersController : ControllerBase
             )).ToList()
         ));
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin")]
+    public async Task<ActionResult<List<OrderResponseDto>>> GetAllOrders()
+    {
+        var orders = await _context.Orders
+            .Include(o => o.OrderItems)
+            .OrderByDescending(o => o.CreatedAt)
+            .ToListAsync();
+
+        return Ok(orders.Select(o => new OrderResponseDto(
+            o.Id,
+            o.Status,
+            o.OrderItems.Sum(i => i.PriceAtPurchase * i.Quantity),
+            o.CreatedAt,
+            o.OrderItems.Select(i => new OrderItemDto(
+                i.ProductId,
+                "",
+                i.PriceAtPurchase,
+                i.Quantity
+            )).ToList()
+        )));
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("admin/{id}/status")]
+    public async Task<ActionResult<OrderResponseDto>> UpdateOrderStatus(int id, UpdateOrderStatusDto dto)
+    {
+        var order = await _context.Orders
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+        if (order == null) return NotFound();
+
+        order.Status = dto.Status;
+        await _context.SaveChangesAsync();
+
+        return Ok(new OrderResponseDto(
+            order.Id,
+            order.Status,
+            order.OrderItems.Sum(i => i.PriceAtPurchase * i.Quantity),
+            order.CreatedAt,
+            order.OrderItems.Select(i => new OrderItemDto(
+                i.ProductId,
+                "",
+                i.PriceAtPurchase,
+                i.Quantity
+            )).ToList()
+        ));
+    }
 }

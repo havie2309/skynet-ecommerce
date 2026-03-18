@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Admin Orders</h2>
+
+  @if (loading) {
+    <p>Loading orders...</p>
+  } @else if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  } @else if (orders.length > 0) {
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Order #</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track order.id) {
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.createdAt | date:'medium' }}</td>
+              <td>{{ order.items.length }} item(s)</td>
+              <td>${{ order.total | number:'1.2-2' }}</td>
+              <td style="width: 220px;">
+                <select
+                  class="form-select"
+                  [value]="order.status"
+                  (change)="updateStatus(order.id, $any($event.target).value)">
+                  @for (status of statuses; track status) {
+                    <option [value]="status">{{ status }}</option>
+                  }
+                </select>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p>No orders found.</p>
+  }
+</div>

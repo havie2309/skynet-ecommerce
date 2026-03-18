@@ -42,6 +42,12 @@ export class AuthService {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
+
+      if (!exp || Date.now() >= exp * 1000) {
+        this.logout();
+        return;
+      }
 
       const email =
         payload.email ??
