@@ -16,6 +16,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.baseUrl}/login`, dto).pipe(
       tap(res => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('refreshToken', res.refreshToken);
         this.currentUser.set(res);
       })
     );
@@ -25,6 +26,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.baseUrl}/register`, dto).pipe(
       tap(res => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('refreshToken', res.refreshToken);
         this.currentUser.set(res);
       })
     );
@@ -32,13 +34,47 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     this.currentUser.set(null);
     this.router.navigate(['/shop']);
   }
 
+  refreshToken() {
+  const user = this.currentUser();
+  if (!user) return;
+
+  return this.http.post<AuthResponse>(`${this.baseUrl}/refresh-token`, {
+    email: user.email,
+    refreshToken: user.refreshToken
+  }).pipe(
+    tap(res => {
+      localStorage.setItem('token', res.token);
+      localStorage.setItem('refreshToken', res.refreshToken);
+      this.currentUser.set(res);
+    })
+  );
+}
+
+logoutFromServer() {
+  const user = this.currentUser();
+  if (!user) {
+    this.logout();
+    return;
+  }
+
+  return this.http.post(`${this.baseUrl}/logout`, {
+    email: user.email,
+    refreshToken: user.refreshToken
+  }).pipe(
+    tap(() => this.logout())
+  );
+}
+
+
   loadCurrentUser() {
     const token = localStorage.getItem('token');
-    if (!token) return;
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!token || !refreshToken) return;
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -57,7 +93,7 @@ export class AuthService {
         payload.role ??
         payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-      this.currentUser.set({ token, email, role });
+      this.currentUser.set({ token, refreshToken, email, role });
     } catch {
       this.logout();
     }

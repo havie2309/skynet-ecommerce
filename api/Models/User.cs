@@ -1,12 +1,12 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Skinet.Api.Models;
 
 public class User
 {
     public int Id { get; set; }
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
+    public string Email { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
     public string Role { get; set; } = "User";
-    public List<Order> Orders { get; set; } = new();
+
+    public string? RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
 }

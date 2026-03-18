@@ -22,4 +22,12 @@ public record LoginDto(
     [Required]
     string Password);
 
-public record AuthResponseDto(string Token, string Email, string Role);
+public record AuthResponseDto(
+    string Token,
+    string RefreshToken,
+    string Email,
+    string Role);
+
+public record RefreshTokenRequestDto(
+    string Email,
+    string RefreshToken);
