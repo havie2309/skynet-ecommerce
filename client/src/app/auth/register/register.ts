@@ -31,7 +31,14 @@ export class Register {
     this.authService.register({ email: this.email, password: this.password })
       .subscribe({
         next: () => this.router.navigate(['/shop']),
-        error: (err) => this.errorMessage = err.error?.message || 'Registration failed'
+        error: (err) => {
+          if (err.error?.errors) {
+            const validationErrors = Object.values(err.error.errors).flat();
+            this.errorMessage = validationErrors.join(' ');
+          } else {
+            this.errorMessage = err.error?.message || 'Registration failed';
+          }
+        }
       });
   }
 }

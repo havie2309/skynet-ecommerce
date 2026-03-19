@@ -22,11 +22,23 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Product>()
             .HasIndex(p => p.Name);
 
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Orders)
+            .WithOne(o => o.User)
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Order>()
+            .HasMany(o => o.OrderItems)
+            .WithOne(oi => oi.Order)
+            .HasForeignKey(oi => oi.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Product>().HasData(
             new Product
             {
                 Id = 1,
-                Name = "Laptop",
+                Name = "Laptop Pro",
                 Description = "Gaming laptop",
                 Price = 1200m,
                 StockQuantity = 10,

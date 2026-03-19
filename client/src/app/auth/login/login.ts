@@ -23,7 +23,14 @@ export class Login {
     this.authService.login({ email: this.email, password: this.password })
       .subscribe({
         next: () => this.router.navigate(['/shop']),
-        error: () => this.errorMessage = 'Invalid email or password'
+        error: (err) => {
+          if (err.error?.errors) {
+            const validationErrors = Object.values(err.error.errors).flat();
+            this.errorMessage = validationErrors.join(' ');
+          } else {
+            this.errorMessage = err.error?.message || 'Login failed';
+          }
+        }
       });
   }
 }
