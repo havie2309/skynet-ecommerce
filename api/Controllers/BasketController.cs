@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Skinet.Api.Models;
 using Skinet.Api.Services;
+using Skinet.Api.Extensions;
+
 
 namespace Skinet.Api.Controllers;
 
@@ -27,7 +29,7 @@ public class BasketController : ControllerBase
     public async Task<ActionResult<CustomerBasket>> UpdateBasket(CustomerBasket basket)
     {
         var updated = await _repo.UpdateBasketAsync(basket);
-        if (updated == null) return BadRequest("Problem updating basket");
+        if (updated == null) return this.ApiError(StatusCodes.Status400BadRequest, "Problem updating basket.");
         return Ok(updated);
     }
 

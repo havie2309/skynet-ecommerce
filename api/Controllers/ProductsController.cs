@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Skinet.Api.Data;
 using Skinet.Api.DTOs;
 using Skinet.Api.Models;
+using Skinet.Api.Extensions;
+
 
 namespace Skinet.Api.Controllers;
 
@@ -133,7 +135,9 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<ProductDto>> UpdateProduct(int id, ProductDto dto)
     {
         var product = await _context.Products.FindAsync(id);
-        if (product == null) return NotFound();
+        if (product == null) 
+            return this.ApiError(StatusCodes.Status404NotFound, $"Product {id} was not found.");
+
 
         product.Name = dto.Name;
         product.Description = dto.Description;
@@ -160,7 +164,9 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult> DeleteProduct(int id)
     {
         var product = await _context.Products.FindAsync(id);
-        if (product == null) return NotFound();
+        if (product == null)
+            return this.ApiError(StatusCodes.Status404NotFound, $"Product {id} was not found.");
+
 
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();

@@ -4,6 +4,8 @@ using Skinet.Api.Data;
 using Skinet.Api.DTOs;
 using Skinet.Api.Services;
 using AppUser = Skinet.Api.Models.User;
+using Skinet.Api.Extensions;
+
 
 namespace Skinet.Api.Controllers;
 
@@ -24,7 +26,7 @@ public class AccountController : ControllerBase
     public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto)
     {
         if (await _context.Users.AnyAsync(x => x.Email == dto.Email))
-            return BadRequest("Email already exists");
+            return this.ApiError(StatusCodes.Status400BadRequest, "Email already exists.");
 
         var user = new AppUser
         {
@@ -52,7 +54,7 @@ public class AccountController : ControllerBase
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-            return Unauthorized("Invalid credentials");
+            return this.ApiError(StatusCodes.Status401Unauthorized, "Invalid credentials.");
 
         user.RefreshToken = _tokenService.GenerateRefreshToken();
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);

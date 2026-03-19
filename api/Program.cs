@@ -7,6 +7,10 @@ using StackExchange.Redis;
 using Stripe;
 using Skinet.Api.Data;
 using Skinet.Api.Services;
+using Microsoft.AspNetCore.Mvc;
+using Skinet.Api.Errors;
+using Skinet.Api.Middleware;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +24,28 @@ var stripeSettings = builder.Configuration
 StripeConfiguration.ApiKey = stripeSettings?.SecretKey;
 
 // Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value!.Errors
+                        .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage) ? "Invalid value." : e.ErrorMessage)
+                        .ToArray());
+
+            var response = new ApiErrorResponse(
+                StatusCodes.Status400BadRequest,
+                "Validation failed.",
+                Errors: errors,
+                TraceId: context.HttpContext.TraceIdentifier);
+
+            return new BadRequestObjectResult(response);
+        };
+    });
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -92,9 +117,26 @@ builder.Services.AddScoped<Skinet.Api.Services.TokenService>();
 
 builder.Services.AddCors(opt =>
     opt.AddPolicy("CorsPolicy", policy =>
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200")));
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    context.Response.Headers["X-XSS-Protection"] = "0";
+    context.Response.Headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
+    context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
+
+    await next();
+});
 
 if (app.Environment.IsDevelopment())
 {

@@ -9,6 +9,8 @@ using Skinet.Api.Data;
 using Skinet.Api.DTOs;
 using Skinet.Api.Models;
 using Skinet.Api.Services;
+using Skinet.Api.Extensions;
+
 
 namespace Skinet.Api.Controllers;
 
@@ -45,12 +47,13 @@ public class PaymentsController : ControllerBase
         var basketJson = await db.StringGetAsync(dto.BasketId);
 
         if (basketJson.IsNullOrEmpty)
-            return BadRequest("Basket not found");
+            return this.ApiError(StatusCodes.Status400BadRequest, "Basket not found.");
+
 
         var basket = JsonSerializer.Deserialize<CustomerBasket>(basketJson!);
 
         if (basket == null || basket.Items == null || basket.Items.Count == 0)
-            return BadRequest("Basket is empty");
+            return this.ApiError(StatusCodes.Status400BadRequest, "Basket is empty.");
 
         decimal total = 0;
 
@@ -59,7 +62,7 @@ public class PaymentsController : ControllerBase
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId);
 
             if (product == null)
-                return BadRequest($"Product with id {item.ProductId} not found");
+                return this.ApiError(StatusCodes.Status400BadRequest, $"Product with id {item.ProductId} was not found.");
 
             total += product.Price * item.Quantity;
         }

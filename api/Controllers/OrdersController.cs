@@ -6,6 +6,8 @@ using Skinet.Api.Data;
 using Skinet.Api.DTOs;
 using Skinet.Api.Models;
 using Skinet.Api.Services;
+using Skinet.Api.Extensions;
+
 
 namespace Skinet.Api.Controllers;
 
@@ -28,7 +30,8 @@ public class OrdersController : ControllerBase
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        if (user == null) return Unauthorized();
+        if (user == null)
+            return this.ApiError(StatusCodes.Status401Unauthorized, "User account was not found.");
 
         var orderItems = dto.Items.Select(i => new OrderItem
         {
@@ -95,7 +98,9 @@ public class OrdersController : ControllerBase
             .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
 
-        if (order == null) return NotFound();
+        if (order == null)
+            return this.ApiError(StatusCodes.Status404NotFound, $"Order {id} was not found.");
+
 
         var total = order.OrderItems.Sum(i => i.PriceAtPurchase * i.Quantity);
 
