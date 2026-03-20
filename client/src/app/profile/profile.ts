@@ -7,8 +7,10 @@ import { AuthService } from '../core/services/auth';
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './profile.html'
+  templateUrl: './profile.html',
+  styleUrl: './profile.scss'
 })
+
 export class Profile {
   authService = inject(AuthService);
 }

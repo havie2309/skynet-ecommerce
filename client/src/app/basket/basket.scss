@@ -57,7 +57,7 @@
 .empty-card h1 {
   margin: 0 0 0.75rem;
   color: #18243f;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
   line-height: 1.08;
 }
 
@@ -211,7 +211,7 @@
 }
 
 .primary-checkout {
-  background: linear-gradient(135deg, #18233f, #2a4fc8);
+  background: #2f4bb2;
   color: #fff;
   border: 0;
 }

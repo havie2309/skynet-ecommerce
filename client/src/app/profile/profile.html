@@ -1,15 +1,51 @@
-<div class="container mt-4" style="max-width: 700px;">
-  <h2 class="mb-4">My Profile</h2>
+<div class="profile-page">
+  <div class="profile-shell">
+    <section class="profile-main">
+      <div class="profile-card">
+        <span class="profile-kicker">My Profile</span>
+        <h1>Manage your account overview.</h1>
+        <p>
+          Review your account details, track your role access, and jump quickly to your orders or storefront.
+        </p>
 
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <p><strong>Email:</strong> {{ authService.currentUser()?.email }}</p>
-      <p><strong>Role:</strong> {{ authService.currentUser()?.role }}</p>
+        <div class="profile-info-grid">
+          <div class="info-box">
+            <span>Email</span>
+            <strong>{{ authService.currentUser()?.email }}</strong>
+          </div>
 
-      <div class="d-flex gap-2 mt-4">
-        <a routerLink="/orders" class="btn btn-dark">My Orders</a>
-        <a routerLink="/shop" class="btn btn-outline-secondary">Continue Shopping</a>
+          <div class="info-box">
+            <span>Role</span>
+            <strong>{{ authService.currentUser()?.role }}</strong>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <a routerLink="/orders" class="primary-action">My Orders</a>
+          <a routerLink="/shop" class="secondary-action">Continue Shopping</a>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <aside class="profile-side">
+      <div class="profile-summary">
+        <span class="summary-kicker">Account</span>
+        <h2>Your space</h2>
+        <p>
+          Use this profile area as your quick account hub for orders, shopping activity, and future account settings.
+        </p>
+
+        <div class="summary-points">
+          <div>
+            <span>Status</span>
+            <strong>Signed in</strong>
+          </div>
+          <div>
+            <span>Access</span>
+            <strong>{{ authService.currentUser()?.role }}</strong>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
 </div>

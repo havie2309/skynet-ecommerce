@@ -18,8 +18,8 @@
             <strong>{{ product.stockQuantity }}</strong>
           </div>
           <div class="mini-info-card">
-            <span>Category</span>
-            <strong>{{ product.category || 'General' }}</strong>
+            <span>Status</span>
+            <strong>{{ product.stockQuantity > 0 ? 'Available now' : 'Unavailable' }}</strong>
           </div>
         </div>
       </div>

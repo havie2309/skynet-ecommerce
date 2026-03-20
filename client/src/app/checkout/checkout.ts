@@ -11,8 +11,10 @@ import { OrderService } from '../core/services/order';
   selector: 'app-checkout',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './checkout.html'
+  templateUrl: './checkout.html',
+  styleUrl: './checkout.scss'
 })
+
 export class Checkout implements OnInit {
   private basketService = inject(BasketService);
   private paymentService = inject(PaymentService);

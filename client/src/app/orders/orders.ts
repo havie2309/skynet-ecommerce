@@ -8,8 +8,10 @@ import { OrderService } from '../core/services/order';
   selector: 'app-orders',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './orders.html'
+  templateUrl: './orders.html',
+  styleUrl: './orders.scss'
 })
+
 export class Orders implements OnInit {
   orders: Order[] = [];
 

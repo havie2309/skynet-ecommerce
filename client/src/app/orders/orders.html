@@ -1,45 +1,83 @@
-<div class="container mt-4">
-  <h2 class="mb-4">📦 My Orders</h2>
-
+<div class="orders-page">
   @if (orders.length > 0) {
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Order #</th>
-            <th>Date</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
+    <div class="orders-shell">
+      <section class="orders-main">
+        <div class="orders-header-card">
+          <span class="orders-kicker">My Orders</span>
+          <h1>Track every order in one place.</h1>
+          <p>
+            Review your recent purchases, monitor status updates, and open full order details whenever needed.
+          </p>
+        </div>
+
+        <div class="orders-list-card">
           @for (order of orders; track order.id) {
-            <tr>
-              <td>#{{ order.id }}</td>
-              <td>{{ order.createdAt | date:'mediumDate' }}</td>
-              <td>{{ order.items.length }} item(s)</td>
-              <td>${{ order.total | number:'1.2-2' }}</td>
-              <td>
-                <span class="badge bg-transparent" [ngClass]="getStatusClass(order.status)">
+            <article class="order-row">
+              <div class="order-row-main">
+                <div>
+                  <p class="order-label">Order number</p>
+                  <h3>#{{ order.id }}</h3>
+                </div>
+
+                <div>
+                  <p class="order-label">Placed on</p>
+                  <strong>{{ order.createdAt | date:'mediumDate' }}</strong>
+                </div>
+
+                <div>
+                  <p class="order-label">Items</p>
+                  <strong>{{ order.items.length }} item(s)</strong>
+                </div>
+
+                <div>
+                  <p class="order-label">Total</p>
+                  <strong>${{ order.total | number:'1.2-2' }}</strong>
+                </div>
+              </div>
+
+              <div class="order-row-side">
+                <span class="status-pill" [ngClass]="getStatusClass(order.status)">
                   {{ order.status }}
                 </span>
-              </td>
-              <td>
-                <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-outline-dark">
+
+                <a [routerLink]="['/orders', order.id]" class="details-link">
                   View Details
                 </a>
-              </td>
-            </tr>
+              </div>
+            </article>
           }
-        </tbody>
-      </table>
+        </div>
+      </section>
+
+      <aside class="orders-summary">
+        <div class="summary-card">
+          <span class="summary-kicker">Overview</span>
+          <h2>{{ orders.length }}</h2>
+          <p>Total orders currently available in your account history.</p>
+
+          <div class="summary-points">
+            <div>
+              <span>Latest order</span>
+              <strong>#{{ orders[0].id }}</strong>
+            </div>
+            <div>
+              <span>Most recent status</span>
+              <strong>{{ orders[0].status }}</strong>
+            </div>
+          </div>
+
+          <a routerLink="/shop" class="primary-action">Continue Shopping</a>
+        </div>
+      </aside>
     </div>
   } @else {
-    <div class="text-center mt-5">
-      <h4 class="text-muted">No orders yet</h4>
-      <a routerLink="/shop" class="btn btn-dark mt-3">Start Shopping</a>
+    <div class="orders-empty">
+      <div class="empty-card">
+        <span class="orders-kicker">My Orders</span>
+        <h1>No orders yet.</h1>
+        <p>Start shopping and your order history will appear here once you complete checkout.</p>
+        <a routerLink="/shop" class="primary-action">Start Shopping</a>
+      </div>
     </div>
   }
 </div>
