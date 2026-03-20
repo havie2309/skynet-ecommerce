@@ -1,115 +1,188 @@
-<div class="container mt-4">
+<div class="marketplace-page">
+  <section class="hero-shell">
+    <div class="hero-copy">
+      <span class="hero-kicker">New Season Marketplace</span>
+      <h1>Discover standout products for every part of your day.</h1>
+      <p>
+        Browse curated picks across fashion, home, electronics, and lifestyle,
+        with fast filters built right into the storefront.
+      </p>
 
-  <!-- Search / Sort / Filters -->
-  <div class="row g-3 mb-4">
-    <div class="col-md-4">
-      <input
-        class="form-control"
-        placeholder="Search products..."
-        [value]="queryParams.search"
-        (input)="onSearch($any($event.target).value)" />
-    </div>
-
-    <div class="col-md-2">
-      <select class="form-select" (change)="onBrandChange($any($event.target).value)">
-        <option value="">All Brands</option>
-        @for (brand of filters.brands; track brand) {
-          <option [value]="brand" [selected]="queryParams.brand === brand">{{ brand }}</option>
-        }
-      </select>
-    </div>
-
-    <div class="col-md-2">
-      <select class="form-select" (change)="onCategoryChange($any($event.target).value)">
-        <option value="">All Categories</option>
-        @for (category of filters.categories; track category) {
-          <option [value]="category" [selected]="queryParams.category === category">{{ category }}</option>
-        }
-      </select>
-    </div>
-
-    <div class="col-md-2">
-      <input
-        type="number"
-        class="form-control"
-        placeholder="Min Price"
-        [value]="queryParams.minPrice ?? ''"
-        (input)="onMinPriceChange($any($event.target).value)" />
-    </div>
-
-    <div class="col-md-2">
-      <input
-        type="number"
-        class="form-control"
-        placeholder="Max Price"
-        [value]="queryParams.maxPrice ?? ''"
-        (input)="onMaxPriceChange($any($event.target).value)" />
-    </div>
-
-    <div class="col-md-3">
-      <select class="form-select" (change)="onSort($any($event.target).value)">
-        <option value="">Sort by</option>
-        <option value="priceAsc" [selected]="queryParams.sort === 'priceAsc'">Price: Low to High</option>
-        <option value="priceDesc" [selected]="queryParams.sort === 'priceDesc'">Price: High to Low</option>
-        <option value="name" [selected]="queryParams.sort === 'name'">Name A-Z</option>
-      </select>
-    </div>
-
-    <div class="col-md-2">
-      <button class="btn btn-outline-dark w-100" (click)="clearFilters()">
-        Clear Filters
-      </button>
-    </div>
-  </div>
-
-  <!-- Active Filter Chips -->
-  <div class="d-flex flex-wrap gap-2 mb-4">
-    @if (queryParams.search) {
-      <span class="badge text-bg-dark">Search: {{ queryParams.search }}</span>
-    }
-    @if (queryParams.brand) {
-      <span class="badge text-bg-primary">Brand: {{ queryParams.brand }}</span>
-    }
-    @if (queryParams.category) {
-      <span class="badge text-bg-success">Category: {{ queryParams.category }}</span>
-    }
-    @if (queryParams.minPrice !== null) {
-      <span class="badge text-bg-warning">Min: ${{ queryParams.minPrice }}</span>
-    }
-    @if (queryParams.maxPrice !== null) {
-      <span class="badge text-bg-warning">Max: ${{ queryParams.maxPrice }}</span>
-    }
-    @if (queryParams.sort) {
-      <span class="badge text-bg-secondary">Sort: {{ queryParams.sort }}</span>
-    }
-  </div>
-
-  <!-- Product Grid -->
-  <div class="row row-cols-1 row-cols-md-4 g-4">
-    @for (p of products; track p.id) {
-      <div class="col">
-        <app-product-card [product]="p"></app-product-card>
+      <div class="hero-search">
+        <input
+          type="text"
+          placeholder="Search products, brands, and categories"
+          [value]="queryParams.search"
+          (input)="onSearch($any($event.target).value)" />
+        <button type="button" (click)="runSearch()">Explore</button>
       </div>
-    }
-  </div>
 
-  <!-- Pagination -->
-  <div class="d-flex justify-content-center mt-4">
-    <button
-      class="btn btn-outline-secondary me-2"
-      [disabled]="queryParams.pageIndex === 1"
-      (click)="onPageChange(queryParams.pageIndex - 1)">
-      ← Prev
-    </button>
+      <div class="hero-tags">
+        <span>Trending picks</span>
+        <span>Fresh arrivals</span>
+        <span>Best value</span>
+      </div>
+    </div>
 
-    <span class="align-self-center px-3">Page {{ queryParams.pageIndex }}</span>
+    <div class="hero-panel">
+      <div class="hero-panel-card">
+        <p class="eyebrow">Featured Collection</p>
+        <h2>Everyday essentials with a premium look.</h2>
+        <p>
+          Build your basket with highly rated products from across the store.
+        </p>
+      </div>
 
-    <button
-      class="btn btn-outline-secondary ms-2"
-      [disabled]="queryParams.pageIndex * queryParams.pageSize >= totalCount"
-      (click)="onPageChange(queryParams.pageIndex + 1)">
-      Next →
-    </button>
-  </div>
+      <div class="hero-mini-grid">
+        <div class="mini-tile">
+          <span>Brands</span>
+          <strong>{{ filters.brands.length }}</strong>
+        </div>
+        <div class="mini-tile">
+          <span>Categories</span>
+          <strong>{{ filters.categories.length }}</strong>
+        </div>
+        <div class="mini-tile">
+          <span>Results</span>
+          <strong>{{ totalCount }}</strong>
+        </div>
+        <div class="mini-tile">
+          <span>Page</span>
+          <strong>{{ queryParams.pageIndex }}</strong>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <section class="catalog-shell">
+    <aside class="catalog-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-head">
+          <h3>Filters</h3>
+          <button type="button" class="clear-link" (click)="clearFilters()">Reset</button>
+        </div>
+
+        <div class="filter-group">
+          <label>Brand</label>
+          <select class="form-select" (change)="onBrandChange($any($event.target).value)">
+            <option value="">All Brands</option>
+            @for (brand of filters.brands; track brand) {
+              <option [value]="brand" [selected]="queryParams.brand === brand">{{ brand }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Category</label>
+          <select class="form-select" (change)="onCategoryChange($any($event.target).value)">
+            <option value="">All Categories</option>
+            @for (category of filters.categories; track category) {
+              <option [value]="category" [selected]="queryParams.category === category">{{ category }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Minimum price</label>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="0"
+            [value]="queryParams.minPrice ?? ''"
+            (input)="onMinPriceChange($any($event.target).value)" />
+        </div>
+
+        <div class="filter-group">
+          <label>Maximum price</label>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="500"
+            [value]="queryParams.maxPrice ?? ''"
+            (input)="onMaxPriceChange($any($event.target).value)" />
+        </div>
+      </div>
+
+      <div class="sidebar-card active-card">
+        <h3>Active Filters</h3>
+
+        <div class="chip-wrap">
+          @if (queryParams.search) {
+            <span class="filter-chip">Search: {{ queryParams.search }}</span>
+          }
+          @if (queryParams.brand) {
+            <span class="filter-chip">Brand: {{ queryParams.brand }}</span>
+          }
+          @if (queryParams.category) {
+            <span class="filter-chip">Category: {{ queryParams.category }}</span>
+          }
+          @if (queryParams.minPrice !== null) {
+            <span class="filter-chip">Min: ${{ queryParams.minPrice }}</span>
+          }
+          @if (queryParams.maxPrice !== null) {
+            <span class="filter-chip">Max: ${{ queryParams.maxPrice }}</span>
+          }
+          @if (queryParams.sort) {
+            <span class="filter-chip">Sort: {{ queryParams.sort }}</span>
+          }
+
+          @if (
+            !queryParams.search &&
+            !queryParams.brand &&
+            !queryParams.category &&
+            queryParams.minPrice === null &&
+            queryParams.maxPrice === null &&
+            !queryParams.sort
+          ) {
+            <span class="filter-empty">No filters applied yet.</span>
+          }
+        </div>
+      </div>
+    </aside>
+
+    <div class="catalog-main">
+      <div class="catalog-toolbar">
+        <div>
+          <p class="toolbar-label">Marketplace results</p>
+          <h2>{{ totalCount }} products available</h2>
+        </div>
+
+        <div class="toolbar-sort">
+          <label for="sortSelect">Sort</label>
+          <select id="sortSelect" class="form-select" (change)="onSort($any($event.target).value)">
+            <option value="">Featured</option>
+            <option value="priceAsc" [selected]="queryParams.sort === 'priceAsc'">Price: Low to High</option>
+            <option value="priceDesc" [selected]="queryParams.sort === 'priceDesc'">Price: High to Low</option>
+            <option value="name" [selected]="queryParams.sort === 'name'">Name A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="product-grid">
+        @for (p of products; track p.id) {
+          <div class="product-grid-item">
+            <app-product-card [product]="p"></app-product-card>
+          </div>
+        }
+      </div>
+
+      <div class="pagination-bar">
+        <button
+          class="btn btn-outline-secondary"
+          [disabled]="queryParams.pageIndex === 1"
+          (click)="onPageChange(queryParams.pageIndex - 1)">
+          Previous
+        </button>
+
+        <span>Page {{ queryParams.pageIndex }}</span>
+
+        <button
+          class="btn btn-outline-secondary"
+          [disabled]="queryParams.pageIndex * queryParams.pageSize >= totalCount"
+          (click)="onPageChange(queryParams.pageIndex + 1)">
+          Next
+        </button>
+      </div>
+    </div>
+  </section>
 </div>

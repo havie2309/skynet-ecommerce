@@ -1,57 +1,88 @@
-<div class="container mt-4">
-  <h2 class="mb-4">🛒 Your Basket</h2>
-
+<div class="basket-page">
   @if (basketService.basket() && basketService.basket()!.items.length > 0) {
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of basketService.basket()!.items; track item.productId) {
-            <tr>
-              <td>
-                <div class="d-flex align-items-center gap-3">
-                  <img [src]="item.imageUrl || 'https://placehold.co/60x60'"
-                       width="60"
-                       height="60"
-                       style="object-fit: cover"
-                       class="rounded">
-                  <span>{{ item.productName }}</span>
-                </div>
-              </td>
-              <td>${{ item.price | number:'1.2-2' }}</td>
-              <td>{{ item.quantity }}</td>
-              <td>${{ item.price * item.quantity | number:'1.2-2' }}</td>
-              <td>
-                <button
-                  class="btn btn-sm btn-outline-danger"
-                  (click)="removeItem(item.productId)">
-                  Remove
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <div class="basket-shell">
+      <section class="basket-main">
+        <div class="basket-header-card">
+          <span class="basket-kicker">Your Cart</span>
+          <h1>Review your picks before checkout.</h1>
+          <p>
+            Double-check your items, pricing, and basket total before moving to secure payment.
+          </p>
+        </div>
 
-    <div class="text-end mt-3">
-      <h4>Total: ${{ total | number:'1.2-2' }}</h4>
-      <a class="btn btn-dark btn-lg mt-2" routerLink="/checkout">
-        Proceed to Checkout
-      </a>
+        <div class="basket-items-card">
+          @for (item of basketService.basket()!.items; track item.productId) {
+            <article class="basket-item">
+              <div class="basket-item-image">
+                <img
+                  [src]="item.imageUrl || 'https://placehold.co/120x120?text=Item'"
+                  [alt]="item.productName" />
+              </div>
+
+              <div class="basket-item-content">
+                <div class="basket-item-top">
+                  <div>
+                    <h3>{{ item.productName }}</h3>
+                    <p class="item-meta">Unit price: ${{ item.price | number:'1.2-2' }}</p>
+                  </div>
+
+                  <button
+                    class="remove-button"
+                    (click)="removeItem(item.productId)">
+                    Remove
+                  </button>
+                </div>
+
+                <div class="basket-item-bottom">
+                  <div class="quantity-pill">
+                    Qty {{ item.quantity }}
+                  </div>
+
+                  <strong class="subtotal">
+                    ${{ item.price * item.quantity | number:'1.2-2' }}
+                  </strong>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+
+      <aside class="basket-summary">
+        <div class="summary-card">
+          <span class="summary-kicker">Order Summary</span>
+          <h2>${{ total | number:'1.2-2' }}</h2>
+          <p>Total for {{ basketService.basket()!.items.length }} item(s) in your basket.</p>
+
+          <div class="summary-breakdown">
+            <div>
+              <span>Items</span>
+              <strong>{{ basketService.basket()!.items.length }}</strong>
+            </div>
+            <div>
+              <span>Estimated shipping</span>
+              <strong>Calculated at checkout</strong>
+            </div>
+          </div>
+
+          <a class="primary-checkout" routerLink="/checkout">
+            Proceed to Checkout
+          </a>
+
+          <a class="secondary-link" routerLink="/shop">
+            Continue Shopping
+          </a>
+        </div>
+      </aside>
     </div>
   } @else {
-    <div class="text-center mt-5">
-      <h4 class="text-muted">Your basket is empty</h4>
-      <a routerLink="/shop" class="btn btn-dark mt-3">Continue Shopping</a>
+    <div class="basket-empty">
+      <div class="empty-card">
+        <span class="basket-kicker">Your Cart</span>
+        <h1>Your basket is empty.</h1>
+        <p>Explore the marketplace and add products to start building your order.</p>
+        <a routerLink="/shop" class="primary-checkout">Continue Shopping</a>
+      </div>
     </div>
   }
 </div>

@@ -1,17 +1,59 @@
-<div class="container mt-5">
+<div class="detail-page">
   @if (product) {
-    <div class="row">
-      <div class="col-md-6">
-        <img [src]="product.imageUrl || 'https://placehold.co/400x200'" 
-             class="img-fluid rounded shadow" [alt]="product.name">
+    <div class="detail-shell">
+      <div class="detail-gallery">
+        <div class="detail-image-card">
+          <img
+            [src]="product.imageUrl || 'https://placehold.co/900x900?text=Product'"
+            [alt]="product.name" />
+        </div>
+
+        <div class="detail-mini-info">
+          <div class="mini-info-card">
+            <span>Availability</span>
+            <strong>{{ product.stockQuantity > 0 ? 'In stock' : 'Out of stock' }}</strong>
+          </div>
+          <div class="mini-info-card">
+            <span>Units left</span>
+            <strong>{{ product.stockQuantity }}</strong>
+          </div>
+          <div class="mini-info-card">
+            <span>Category</span>
+            <strong>{{ product.category || 'General' }}</strong>
+          </div>
+        </div>
       </div>
-      <div class="col-md-6">
-        <h2>{{ product.name }}</h2>
-        <h4 class="text-success">${{ product.price | number:'1.2-2' }}</h4>
-        <p>{{ product.description }}</p>
-        <p class="text-muted">Stock: {{ product.stockQuantity }}</p>
-        <button class="btn btn-dark btn-lg mt-3" (click)="addToBasket()">Add to Basket</button>
-        <a routerLink="/shop" class="btn btn-outline-secondary btn-lg mt-3 ms-2">← Back</a>
+
+      <div class="detail-content">
+        <span class="detail-kicker">Marketplace Pick</span>
+        <h1>{{ product.name }}</h1>
+
+        <div class="detail-price-row">
+          <h2>${{ product.price | number:'1.2-2' }}</h2>
+          <span class="stock-badge" [class.low-stock]="product.stockQuantity <= 5">
+            {{ product.stockQuantity > 5 ? 'Ready to ship' : 'Limited stock' }}
+          </span>
+        </div>
+
+        <p class="detail-description">
+          {{ product.description }}
+        </p>
+
+        <div class="detail-highlights">
+          <div class="highlight-card">
+            <span>Curated quality</span>
+            <strong>Selected for modern everyday use</strong>
+          </div>
+          <div class="highlight-card">
+            <span>Fast basket flow</span>
+            <strong>Add now and continue to secure checkout</strong>
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          <button class="primary-action" (click)="addToBasket()">Add to Basket</button>
+          <a routerLink="/shop" class="secondary-action">Back to Shop</a>
+        </div>
       </div>
     </div>
   }

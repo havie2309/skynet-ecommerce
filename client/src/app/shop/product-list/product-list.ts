@@ -76,6 +76,11 @@ export class ProductList implements OnInit {
     });
   }
 
+  runSearch() {
+    this.queryParams.pageIndex = 1;
+    this.updateUrl();
+  }
+
   updateUrl(): void {
     this.router.navigate([], {
       relativeTo: this.route,
