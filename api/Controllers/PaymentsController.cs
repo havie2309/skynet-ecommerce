@@ -7,10 +7,9 @@ using StackExchange.Redis;
 using Stripe;
 using Skinet.Api.Data;
 using Skinet.Api.DTOs;
+using Skinet.Api.Extensions;
 using Skinet.Api.Models;
 using Skinet.Api.Services;
-using Skinet.Api.Extensions;
-
 
 namespace Skinet.Api.Controllers;
 
@@ -47,13 +46,12 @@ public class PaymentsController : ControllerBase
         var basketJson = await db.StringGetAsync(dto.BasketId);
 
         if (basketJson.IsNullOrEmpty)
-            return this.ApiError(StatusCodes.Status400BadRequest, "Basket not found.");
-
+            return this.ApiError(StatusCodes.Status400BadRequest, "Your basket could not be found.");
 
         var basket = JsonSerializer.Deserialize<CustomerBasket>(basketJson!);
 
         if (basket == null || basket.Items == null || basket.Items.Count == 0)
-            return this.ApiError(StatusCodes.Status400BadRequest, "Basket is empty.");
+            return this.ApiError(StatusCodes.Status400BadRequest, "Your basket is empty.");
 
         decimal total = 0;
 
@@ -62,23 +60,41 @@ public class PaymentsController : ControllerBase
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId);
 
             if (product == null)
-                return this.ApiError(StatusCodes.Status400BadRequest, $"Product with id {item.ProductId} was not found.");
+                return this.ApiError(
+                    StatusCodes.Status400BadRequest,
+                    $"A product in your basket was not found (id: {item.ProductId}).");
 
             total += product.Price * item.Quantity;
         }
 
-        StripeConfiguration.ApiKey = _stripeSettings.SecretKey;  // <-- FIXED
-
-        var service = new PaymentIntentService();
-        var options = new PaymentIntentCreateOptions
+        try
         {
-            Amount = (long)(total * 100),
-            Currency = "usd",
-            PaymentMethodTypes = new List<string> { "card" }
-        };
+            StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
 
-        var paymentIntent = await service.CreateAsync(options);
+            var service = new PaymentIntentService();
+            var options = new PaymentIntentCreateOptions
+            {
+                Amount = (long)(total * 100),
+                Currency = "usd",
+                PaymentMethodTypes = new List<string> { "card" }
+            };
 
-        return Ok(new PaymentIntentResponseDto(paymentIntent.ClientSecret));
+            var paymentIntent = await service.CreateAsync(options);
+
+            return Ok(new PaymentIntentResponseDto(paymentIntent.ClientSecret));
+        }
+        catch (StripeException ex)
+        {
+            return this.ApiError(
+                StatusCodes.Status400BadRequest,
+                "Stripe payment request failed.",
+                ex.Message);
+        }
+        catch (Exception)
+        {
+            return this.ApiError(
+                StatusCodes.Status500InternalServerError,
+                "Unable to create payment intent.");
+        }
     }
 }

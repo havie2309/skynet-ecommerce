@@ -95,9 +95,12 @@ export class Checkout implements OnInit {
       localStorage.removeItem('basket_id');
 
       this.router.navigate(['/order-confirmation', order.id]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment failed:', error);
-      this.error = 'Something went wrong during checkout';
+      this.error =
+        error?.error?.message ||
+        error?.error?.details ||
+        'Unable to start payment. Please try again.';
     } finally {
       this.loading = false;
     }

@@ -17,6 +17,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<StripeSettings>(
     builder.Configuration.GetSection("StripeSettings"));
 
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+
 var stripeSettings = builder.Configuration
     .GetSection("StripeSettings")
     .Get<StripeSettings>();
@@ -114,6 +117,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<Skinet.Api.Services.TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddCors(opt =>
     opt.AddPolicy("CorsPolicy", policy =>

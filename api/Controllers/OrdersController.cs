@@ -18,11 +18,13 @@ public class OrdersController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly BasketRepository _basketRepo;
+    private readonly IEmailService _emailService;
 
-    public OrdersController(AppDbContext context, BasketRepository basketRepo)
+    public OrdersController(AppDbContext context, BasketRepository basketRepo, IEmailService emailService)
     {
         _context = context;
         _basketRepo = basketRepo;
+        _emailService = emailService;
     }
 
     [HttpPost]
@@ -50,6 +52,15 @@ public class OrdersController : ControllerBase
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
+
+        try
+        {
+            await _emailService.SendOrderConfirmationAsync(user.Email, order.Id);
+        }
+        catch
+        {
+            // Email failure should not block order creation.
+        }
 
         await _basketRepo.DeleteBasketAsync(dto.BasketId);
 
