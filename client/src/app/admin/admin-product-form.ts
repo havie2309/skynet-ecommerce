@@ -9,8 +9,10 @@ import { Product } from '../models/product';
   selector: 'app-admin-product-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './admin-product-form.html'
+  templateUrl: './admin-product-form.html',
+  styleUrl: './admin-product-form.scss'
 })
+
 export class AdminProductForm implements OnInit {
   isEditMode = false;
   productId = 0;

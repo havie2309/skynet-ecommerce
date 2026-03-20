@@ -1,52 +1,80 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Admin Products</h2>
-    <a routerLink="/admin/products/new" class="btn btn-dark">Add Product</a>
-  </div>
+<div class="admin-products-page">
+  <div class="admin-products-shell">
+    <section class="admin-products-main">
+      <div class="admin-header-card">
+        <div>
+          <span class="admin-kicker">Admin Products</span>
+          <h1>Manage your catalog in one place.</h1>
+          <p>
+            Review products, track stock levels, and keep your storefront listings updated.
+          </p>
+        </div>
 
-  @if (loading) {
-    <p>Loading products...</p>
-  } @else if (error) {
-    <div class="alert alert-danger">{{ error }}</div>
-  } @else {
-    <div class="table-responsive">
-      <table class="table table-striped align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th style="width: 180px;">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+        <a routerLink="/admin/products/new" class="primary-action">Add Product</a>
+      </div>
+
+      @if (loading) {
+        <div class="state-card">
+          <p>Loading products...</p>
+        </div>
+      } @else if (error) {
+        <div class="state-card error-state">
+          <p>{{ error }}</p>
+        </div>
+      } @else {
+        <div class="products-list-card">
           @for (product of products; track product.id) {
-            <tr>
-              <td>
+            <article class="product-row">
+              <div class="product-row-left">
                 <img
-                  [src]="product.imageUrl || 'https://placehold.co/80x80'"
+                  [src]="product.imageUrl || 'https://placehold.co/120x120?text=Item'"
                   [alt]="product.name"
-                  width="60"
-                  height="60"
-                  class="rounded"
-                  style="object-fit: cover;">
-              </td>
-              <td>{{ product.name }}</td>
-              <td>${{ product.price | number:'1.2-2' }}</td>
-              <td>{{ product.stockQuantity }}</td>
-              <td>
-                <a [routerLink]="['/admin/products/edit', product.id]" class="btn btn-sm btn-outline-primary me-2">
+                  class="product-thumb" />
+
+                <div class="product-copy">
+                  <h3>{{ product.name }}</h3>
+                  <p>${{ product.price | number:'1.2-2' }}</p>
+                </div>
+              </div>
+
+              <div class="product-row-mid">
+                <div class="mini-meta">
+                  <span>Stock</span>
+                  <strong>{{ product.stockQuantity }}</strong>
+                </div>
+              </div>
+
+              <div class="product-row-actions">
+                <a [routerLink]="['/admin/products/edit', product.id]" class="secondary-action">
                   Edit
                 </a>
-                <button class="btn btn-sm btn-outline-danger" (click)="deleteProduct(product.id)">
+                <button class="danger-action" (click)="deleteProduct(product.id)">
                   Delete
                 </button>
-              </td>
-            </tr>
+              </div>
+            </article>
           }
-        </tbody>
-      </table>
-    </div>
-  }
+        </div>
+      }
+    </section>
+
+    <aside class="admin-products-side">
+      <div class="summary-card">
+        <span class="summary-kicker">Catalog</span>
+        <h2>{{ products.length }}</h2>
+        <p>Total products currently loaded in the admin catalog view.</p>
+
+        <div class="summary-points">
+          <div>
+            <span>Mode</span>
+            <strong>Management</strong>
+          </div>
+          <div>
+            <span>Visibility</span>
+            <strong>Admin only</strong>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
 </div>

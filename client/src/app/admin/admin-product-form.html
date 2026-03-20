@@ -1,46 +1,85 @@
-<div class="container mt-4" style="max-width: 700px;">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
-    <a routerLink="/admin/products" class="btn btn-outline-secondary">Back</a>
+<div class="admin-form-page">
+  <div class="admin-form-shell">
+    <section class="admin-form-main">
+      <div class="admin-header-card">
+        <div>
+          <span class="admin-kicker">Catalog Editor</span>
+          <h1>{{ isEditMode ? 'Edit product details.' : 'Create a new product.' }}</h1>
+          <p>
+            {{ isEditMode
+              ? 'Update your product information and keep the storefront listing current.'
+              : 'Add a new item to your storefront catalog with pricing, stock, and image information.' }}
+          </p>
+        </div>
+
+        <a routerLink="/admin/products" class="secondary-action">Back</a>
+      </div>
+
+      @if (error) {
+        <div class="state-card error-state">
+          <p>{{ error }}</p>
+        </div>
+      }
+
+      @if (loading) {
+        <div class="state-card">
+          <p>Loading...</p>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="editor-card">
+        <div class="form-grid">
+          <div class="form-group form-group--wide">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="name">
+          </div>
+
+          <div class="form-group form-group--wide">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="5" formControlName="description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Price</label>
+            <input type="number" step="0.01" class="form-control" formControlName="price">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Stock Quantity</label>
+            <input type="number" class="form-control" formControlName="stockQuantity">
+          </div>
+
+          <div class="form-group form-group--wide">
+            <label class="form-label">Image URL</label>
+            <input type="text" class="form-control" formControlName="imageUrl">
+          </div>
+        </div>
+
+        <button type="submit" class="primary-action" [disabled]="loading">
+          {{ isEditMode ? 'Update Product' : 'Create Product' }}
+        </button>
+      </form>
+    </section>
+
+    <aside class="admin-form-side">
+      <div class="summary-card">
+        <span class="summary-kicker">Editing</span>
+        <h2>{{ isEditMode ? 'Existing item' : 'New listing' }}</h2>
+        <p>
+          Use this form to manage product content, pricing, stock availability, and image references.
+        </p>
+
+        <div class="summary-points">
+          <div>
+            <span>Mode</span>
+            <strong>{{ isEditMode ? 'Edit' : 'Create' }}</strong>
+          </div>
+          <div>
+            <span>Visibility</span>
+            <strong>Admin only</strong>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
-
-  @if (error) {
-    <div class="alert alert-danger">{{ error }}</div>
-  }
-
-  @if (loading) {
-    <p>Loading...</p>
-  }
-
-  <form [formGroup]="form" (ngSubmit)="submit()" class="card p-4 shadow-sm">
-    <div class="mb-3">
-      <label class="form-label">Name</label>
-      <input type="text" class="form-control" formControlName="name">
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Description</label>
-      <textarea class="form-control" rows="4" formControlName="description"></textarea>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Price</label>
-      <input type="number" step="0.01" class="form-control" formControlName="price">
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Stock Quantity</label>
-      <input type="number" class="form-control" formControlName="stockQuantity">
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Image URL</label>
-      <input type="text" class="form-control" formControlName="imageUrl">
-    </div>
-
-    <button type="submit" class="btn btn-dark" [disabled]="loading">
-      {{ isEditMode ? 'Update Product' : 'Create Product' }}
-    </button>
-  </form>
 </div>
-    

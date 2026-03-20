@@ -7,8 +7,10 @@ import { OrderService } from '../core/services/order';
   selector: 'app-admin-orders',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './admin-orders.html'
+  templateUrl: './admin-orders.html',
+  styleUrl: './admin-orders.scss'
 })
+
 export class AdminOrders implements OnInit {
   orders: Order[] = [];
   loading = false;

@@ -8,8 +8,10 @@ import { Product, ProductQueryParams } from '../models/product';
   selector: 'app-admin-products',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './admin-products.html'
+  templateUrl: './admin-products.html',
+  styleUrl: './admin-products.scss'
 })
+
 export class AdminProducts implements OnInit {
   products: Product[] = [];
   loading = false;
