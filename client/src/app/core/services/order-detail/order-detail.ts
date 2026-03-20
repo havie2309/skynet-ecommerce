@@ -8,8 +8,10 @@ import { OrderService } from '../order';
   selector: 'app-order-detail',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './order-detail.html'
+  templateUrl: './order-detail.html',
+  styleUrl: './order-detail.scss'
 })
+
 export class OrderDetail implements OnInit {
   order: Order | null = null;
   loading = false;
