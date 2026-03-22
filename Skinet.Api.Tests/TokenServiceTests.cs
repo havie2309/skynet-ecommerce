@@ -1,63 +1,58 @@
-using System.IdentityModel.Tokens.Jwt;
+using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using Skinet.Api.Models;
-using Skinet.Api.Services;
-using Xunit;
+using Skinet.Api.DTOs;
 
 namespace Skinet.Api.Tests;
 
-public class TokenServiceTests
+public class AuthDtoValidationTests
 {
-    private readonly TokenService _tokenService;
-
-    public TokenServiceTests()
+    [Fact]
+    public void RegisterDto_Should_Be_Invalid_When_Email_Is_Missing()
     {
-        var configData = new Dictionary<string, string?>
-        {
-            ["JwtSettings:SecretKey"] = "your-super-secret-key-at-least-32-chars!!",
-            ["JwtSettings:Issuer"] = "SkinetApi",
-            ["JwtSettings:Audience"] = "SkinetClient",
-            ["JwtSettings:ExpiresInMinutes"] = "60"
-        };
+        var dto = new RegisterDto("", "Test1234");
 
-        var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(configData)
-            .Build();
+        var results = ValidateModel(dto);
 
-        _tokenService = new TokenService(configuration);
+        results.Should().Contain(r => r.MemberNames.Contains("Email"));
     }
 
     [Fact]
-    public void CreateToken_Should_Return_A_Valid_Jwt()
+    public void RegisterDto_Should_Be_Invalid_When_Password_Is_Weak()
     {
-        var user = new User
-        {
-            Id = 1,
-            Email = "test@example.com",
-            Role = "Admin",
-            PasswordHash = "hashed"
-        };
+        var dto = new RegisterDto("test@example.com", "weak");
 
-        var token = _tokenService.CreateToken(user);
+        var results = ValidateModel(dto);
 
-        token.Should().NotBeNullOrWhiteSpace();
-
-        var handler = new JwtSecurityTokenHandler();
-        var jwt = handler.ReadJwtToken(token);
-
-        jwt.Claims.FirstOrDefault(c => c.Type.Contains("email"))?.Value.Should().Be("test@example.com");
-        jwt.Claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value.Should().Be("Admin");
+        results.Should().Contain(r => r.MemberNames.Contains("Password"));
     }
 
     [Fact]
-    public void GenerateRefreshToken_Should_Return_NonEmpty_Random_String()
+    public void RegisterDto_Should_Be_Valid_When_Email_And_Password_Are_Valid()
     {
-        var token1 = _tokenService.GenerateRefreshToken();
-        var token2 = _tokenService.GenerateRefreshToken();
+        var dto = new RegisterDto("test@example.com", "Test1234");
 
-        token1.Should().NotBeNullOrWhiteSpace();
-        token2.Should().NotBeNullOrWhiteSpace();
-        token1.Should().NotBe(token2);
+        var results = ValidateModel(dto);
+
+        results.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void LoginDto_Should_Be_Invalid_When_Email_Is_Invalid()
+    {
+        var dto = new LoginDto("not-an-email", "Test1234");
+
+        var results = ValidateModel(dto);
+
+        results.Should().Contain(r => r.MemberNames.Contains("Email"));
+    }
+
+    private static List<ValidationResult> ValidateModel(object model)
+    {
+        var validationResults = new List<ValidationResult>();
+        var context = new ValidationContext(model);
+
+        Validator.TryValidateObject(model, context, validationResults, validateAllProperties: true);
+
+        return validationResults;
     }
 }

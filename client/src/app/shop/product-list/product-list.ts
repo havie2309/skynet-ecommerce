@@ -105,6 +105,7 @@ export class ProductList implements OnInit {
   }
 
   onSort(val: string) {
+    console.log('Sort value:', val);
     this.queryParams.sort = val;
     this.queryParams.pageIndex = 1;
     this.updateUrl();

@@ -27,6 +27,7 @@ public class ProductsController : ControllerBase
         [FromQuery] string? category,
         [FromQuery] decimal? minPrice,
         [FromQuery] decimal? maxPrice,
+        [FromQuery] string? sort,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
@@ -49,8 +50,15 @@ public class ProductsController : ControllerBase
 
         var totalCount = await query.CountAsync();
 
+        query = sort?.Trim() switch
+        {
+            "priceAsc" => query.OrderBy(p => p.Price),
+            "priceDesc" => query.OrderByDescending(p => p.Price),
+            "name" => query.OrderBy(p => p.Name),
+            _ => query.OrderBy(p => p.Id)  
+        };
+
         var products = await query
-            .OrderBy(p => p.Name)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price, p.StockQuantity, p.ImageUrl))

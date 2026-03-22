@@ -118,6 +118,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<Skinet.Api.Services.TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddCors(opt =>
     opt.AddPolicy("CorsPolicy", policy =>
@@ -129,6 +130,23 @@ builder.Services.AddCors(opt =>
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    var start = DateTime.UtcNow;
+
+    await next();
+
+    var elapsed = DateTime.UtcNow - start;
+
+    logger.LogInformation(
+        "HTTP {Method} {Path} responded {StatusCode} in {ElapsedMilliseconds} ms",
+        context.Request.Method,
+        context.Request.Path,
+        context.Response.StatusCode,
+        elapsed.TotalMilliseconds);
+});
 
 app.Use(async (context, next) =>
 {
@@ -152,4 +170,5 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.Run();
