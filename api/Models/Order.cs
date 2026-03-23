@@ -11,5 +11,11 @@ public class Order
 
     public string Status { get; set; } = "Pending";
 
+    public string? PaymentIntentId { get; set; }
+
+    public string? ProcessedWebhookEventId { get; set; }
+
+    public DateTime? PaidAt { get; set; }
+
     public List<OrderItem> OrderItems { get; set; } = new();
 }

@@ -7,6 +7,7 @@ export interface OrderItem {
 
 export interface PlaceOrderDto {
   basketId: string;
+  paymentIntentId?: string | null;
   items: OrderItem[];
 }
 

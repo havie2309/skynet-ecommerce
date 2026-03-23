@@ -4,6 +4,7 @@ export interface CreatePaymentIntentDto {
 
 export interface PaymentIntentResponse {
   clientSecret: string;
+  paymentIntentId: string;
 }
 
 export interface PublishableKeyResponse {

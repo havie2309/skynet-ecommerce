@@ -81,7 +81,7 @@ public class PaymentsController : ControllerBase
 
             var paymentIntent = await service.CreateAsync(options);
 
-            return Ok(new PaymentIntentResponseDto(paymentIntent.ClientSecret));
+            return Ok(new PaymentIntentResponseDto(paymentIntent.ClientSecret, paymentIntent.Id));
         }
         catch (StripeException ex)
         {

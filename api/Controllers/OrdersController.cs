@@ -47,9 +47,10 @@ public class OrdersController : ControllerBase
             UserId = user.Id,
             CreatedAt = DateTime.UtcNow,
             Status = "Pending",
+            PaymentIntentId = dto.PaymentIntentId,
             OrderItems = orderItems
         };
-
+        
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
 
