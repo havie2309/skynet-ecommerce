@@ -5,7 +5,7 @@ using Skinet.Api.Data;
 using Skinet.Api.DTOs;
 using Skinet.Api.Models;
 using Skinet.Api.Extensions;
-
+using Skinet.Api.Services;
 
 namespace Skinet.Api.Controllers;
 
@@ -14,10 +14,12 @@ namespace Skinet.Api.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly ProductCacheService _cacheService;
 
-    public ProductsController(AppDbContext context)
+    public ProductsController(AppDbContext context, ProductCacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     [HttpGet]
@@ -31,6 +33,23 @@ public class ProductsController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
+        var shouldUseListCache =
+            string.IsNullOrWhiteSpace(search) &&
+            string.IsNullOrWhiteSpace(brand) &&
+            string.IsNullOrWhiteSpace(category) &&
+            !minPrice.HasValue &&
+            !maxPrice.HasValue &&
+            page == 1 &&
+            pageSize == 10 &&
+            string.IsNullOrWhiteSpace(sort);
+
+        if (shouldUseListCache)
+        {
+            var cachedList = await _cacheService.GetAsync<object>("products:list");
+            if (cachedList is not null)
+                return Ok(cachedList);
+        }
+
         var query = _context.Products.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -55,7 +74,7 @@ public class ProductsController : ControllerBase
             "priceAsc" => query.OrderBy(p => p.Price),
             "priceDesc" => query.OrderByDescending(p => p.Price),
             "name" => query.OrderBy(p => p.Name),
-            _ => query.OrderBy(p => p.Id)  
+            _ => query.OrderBy(p => p.Id)
         };
 
         var products = await query
@@ -64,13 +83,20 @@ public class ProductsController : ControllerBase
             .Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price, p.StockQuantity, p.ImageUrl))
             .ToListAsync();
 
-        return Ok(new
+        var response = new
         {
             TotalCount = totalCount,
             Page = page,
             PageSize = pageSize,
             Data = products
-        });
+        };
+
+        if (shouldUseListCache)
+        {
+            await _cacheService.SetAsync("products:list", response);
+        }
+
+        return Ok(response);
     }
 
     [HttpGet("filters")]
@@ -100,12 +126,20 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
+        var cacheKey = $"product:{id}";
+        var cachedProduct = await _cacheService.GetAsync<ProductDto>(cacheKey);
+
+        if (cachedProduct is not null)
+            return Ok(cachedProduct);
+
         var product = await _context.Products
             .Where(p => p.Id == id)
             .Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price, p.StockQuantity, p.ImageUrl))
             .FirstOrDefaultAsync();
 
         if (product == null) return NotFound();
+
+        await _cacheService.SetAsync(cacheKey, product);
 
         return Ok(product);
     }
@@ -135,6 +169,9 @@ public class ProductsController : ControllerBase
             product.ImageUrl
         );
 
+        await _cacheService.RemoveAsync("products:list");
+        await _cacheService.RemoveAsync($"product:{product.Id}");
+
         return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, result);
     }
 
@@ -143,9 +180,8 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<ProductDto>> UpdateProduct(int id, ProductDto dto)
     {
         var product = await _context.Products.FindAsync(id);
-        if (product == null) 
+        if (product == null)
             return this.ApiError(StatusCodes.Status404NotFound, $"Product {id} was not found.");
-
 
         product.Name = dto.Name;
         product.Description = dto.Description;
@@ -164,6 +200,9 @@ public class ProductsController : ControllerBase
             product.ImageUrl
         );
 
+        await _cacheService.RemoveAsync("products:list");
+        await _cacheService.RemoveAsync($"product:{product.Id}");
+
         return Ok(result);
     }
 
@@ -175,9 +214,11 @@ public class ProductsController : ControllerBase
         if (product == null)
             return this.ApiError(StatusCodes.Status404NotFound, $"Product {id} was not found.");
 
-
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
+
+        await _cacheService.RemoveAsync("products:list");
+        await _cacheService.RemoveAsync($"product:{id}");
 
         return NoContent();
     }

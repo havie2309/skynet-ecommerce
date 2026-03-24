@@ -95,6 +95,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(
         builder.Configuration.GetConnectionString("Redis")!));
 builder.Services.AddScoped<BasketRepository>();
+builder.Services.AddScoped<ProductCacheService>();
 
 // JWT Auth
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
