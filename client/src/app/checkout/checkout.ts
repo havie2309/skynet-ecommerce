@@ -84,6 +84,7 @@ export class Checkout implements OnInit {
       const order = await firstValueFrom(
         this.orderService.placeOrder({
           basketId: basket.id,
+          paymentIntentId: paymentIntent.paymentIntentId,
           items: basket.items.map(item => ({
             productId: item.productId,
             productName: item.productName,

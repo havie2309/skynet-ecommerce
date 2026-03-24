@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore backend
+        run: dotnet restore .\api\Skinet.Api.csproj
+
+      - name: Build backend
+        run: dotnet build .\api\Skinet.Api.csproj --configuration Release --no-restore
+
+      - name: Run backend tests
+        run: dotnet test .\Skinet.Api.Tests\Skinet.Api.Tests.csproj --configuration Release --no-build
+
+  frontend:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: .\client
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: .\client
