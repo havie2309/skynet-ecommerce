@@ -21,15 +21,18 @@ public class PaymentsController : ControllerBase
     private readonly IConnectionMultiplexer _redis;
     private readonly AppDbContext _context;
     private readonly StripeSettings _stripeSettings;
+    private readonly AppMetrics _metrics;
 
     public PaymentsController(
         IConnectionMultiplexer redis,
         AppDbContext context,
-        IOptions<StripeSettings> stripeOptions)
+        IOptions<StripeSettings> stripeOptions,
+        AppMetrics metrics)
     {
         _redis = redis;
         _context = context;
         _stripeSettings = stripeOptions.Value;
+        _metrics = metrics;
     }
 
     [HttpGet("publishable-key")]
@@ -42,6 +45,8 @@ public class PaymentsController : ControllerBase
     [HttpPost("create-payment-intent")]
     public async Task<ActionResult<PaymentIntentResponseDto>> CreatePaymentIntent(CreatePaymentIntentDto dto)
     {
+        _metrics.Increment("payments.create_intent.attempt");
+
         var db = _redis.GetDatabase();
         var basketJson = await db.StringGetAsync(dto.BasketId);
 

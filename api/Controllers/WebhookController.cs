@@ -14,15 +14,18 @@ public class WebhookController : ControllerBase
     private readonly AppDbContext _context;
     private readonly StripeSettings _stripeSettings;
     private readonly ILogger<WebhookController> _logger;
+    private readonly AppMetrics _metrics;
 
     public WebhookController(
         AppDbContext context,
         IOptions<StripeSettings> stripeOptions,
-        ILogger<WebhookController> logger)
+        ILogger<WebhookController> logger,
+        AppMetrics metrics)
     {
         _context = context;
         _stripeSettings = stripeOptions.Value;
         _logger = logger;
+        _metrics = metrics;
     }
 
     [HttpPost("stripe")]
@@ -68,6 +71,7 @@ public class WebhookController : ControllerBase
                     order.PaidAt = DateTime.UtcNow;
                     order.ProcessedWebhookEventId = stripeEvent.Id;
 
+                    _metrics.Increment("payments.webhook.succeeded");
                     await _context.SaveChangesAsync();
                 }
             }

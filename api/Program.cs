@@ -119,6 +119,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<Skinet.Api.Services.TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<AppMetrics>();
 builder.Services.AddHealthChecks();
 
 builder.Services.AddCors(opt =>
