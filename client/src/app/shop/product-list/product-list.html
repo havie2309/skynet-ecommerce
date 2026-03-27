@@ -1,50 +1,54 @@
-<div class="marketplace-page">
+ <div class="marketplace-page">
   <section class="hero-shell">
     <div class="hero-copy">
-      <span class="hero-kicker">New Season Marketplace</span>
-      <h1>Discover standout products for every part of your day</h1>
+      <span class="hero-kicker">New season flower collection</span>
+      <h1>Send a feeling through flowers</h1>
       <p>
-        Browse curated picks across fashion, home, electronics, and lifestyle,
-        with fast filters built right into the storefront.
+        Choose a mood, a message, or a memory.
+        Snoopy Petal turns everyday flower shopping into a more personal gifting experience.
       </p>
 
       <div class="hero-search">
         <input
           type="text"
-          placeholder="Search products, brands, and categories"
+          placeholder="Search feelings, flowers, or note styles..."
           [value]="queryParams.search"
           (input)="onSearch($any($event.target).value)" />
-        <button type="button" (click)="runSearch()">Explore</button>
+        <button type="button" (click)="runSearch()">Explore bouquets</button>
       </div>
 
       <div class="hero-tags">
-        <span>Trending picks</span>
-        <span>Fresh arrivals</span>
-        <span>Best value</span>
+        <span>I miss you</span>
+        <span>I'm sorry</span>
+        <span>I like you</span>
+        <span>I'm proud of you</span>
+        <span>Thank you</span>
+        <span>Stay strong</span>
       </div>
     </div>
 
     <div class="hero-panel">
       <div class="hero-panel-card">
         <p class="eyebrow">Featured Collection</p>
-        <h2>Everyday essentials with a premium look.</h2>
+        <h2>Moments now, memories later</h2>
         <p>
-          Build your basket with highly rated products from across the store.
+          Pair fresh bouquets for immediate feelings with preserved
+          arrangements that stay beautiful long after the moment passes.
         </p>
       </div>
 
       <div class="hero-mini-grid">
         <div class="mini-tile">
-          <span>Brands</span>
+          <span>Fresh</span>
+          <strong>{{ filters.categories.length > 0 ? totalCount : 0 }}</strong>
+        </div>
+        <div class="mini-tile">
+          <span>Preserved</span>
           <strong>{{ filters.brands.length }}</strong>
         </div>
         <div class="mini-tile">
-          <span>Categories</span>
+          <span>Feelings</span>
           <strong>{{ filters.categories.length }}</strong>
-        </div>
-        <div class="mini-tile">
-          <span>Results</span>
-          <strong>{{ totalCount }}</strong>
         </div>
         <div class="mini-tile">
           <span>Page</span>
@@ -105,7 +109,6 @@
 
       <div class="sidebar-card active-card">
         <h3>Active Filters</h3>
-
         <div class="chip-wrap">
           @if (queryParams.search) {
             <span class="filter-chip">Search: {{ queryParams.search }}</span>
@@ -125,14 +128,9 @@
           @if (queryParams.sort) {
             <span class="filter-chip">Sort: {{ queryParams.sort }}</span>
           }
-
           @if (
-            !queryParams.search &&
-            !queryParams.brand &&
-            !queryParams.category &&
-            queryParams.minPrice === null &&
-            queryParams.maxPrice === null &&
-            !queryParams.sort
+            !queryParams.search && !queryParams.brand && !queryParams.category &&
+            queryParams.minPrice === null && queryParams.maxPrice === null && !queryParams.sort
           ) {
             <span class="filter-empty">No filters applied yet.</span>
           }
@@ -146,7 +144,6 @@
           <p class="toolbar-label">Marketplace results</p>
           <h2>{{ totalCount }} products available</h2>
         </div>
-
         <div class="toolbar-sort">
           <label for="sortSelect">Sort</label>
           <select id="sortSelect" class="form-select" (change)="onSort($any($event.target).value)">
@@ -173,9 +170,7 @@
           (click)="onPageChange(queryParams.pageIndex - 1)">
           Previous
         </button>
-
         <span>Page {{ queryParams.pageIndex }}</span>
-
         <button
           class="btn btn-outline-secondary"
           [disabled]="queryParams.pageIndex * queryParams.pageSize >= totalCount"

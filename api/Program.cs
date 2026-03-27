@@ -122,10 +122,13 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<AppMetrics>();
 builder.Services.AddHealthChecks();
 
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() 
+                     ?? new[] { "http://localhost:4200" };
+
 builder.Services.AddCors(opt =>
     opt.AddPolicy("CorsPolicy", policy =>
         policy
-            .WithOrigins("http://localhost:4200")
+            .WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod()));
 

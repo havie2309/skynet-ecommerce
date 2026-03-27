@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Skinet.Api.Data;
@@ -11,9 +12,11 @@ using Skinet.Api.Data;
 namespace Skinet.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331060358_FixThreeImages")]
+    partial class FixThreeImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,7 +310,7 @@ namespace Skinet.Api.Migrations
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
                             Description = "A handcrafted wreath of dried blush peonies and eucalyptus for your front door.",
-                            ImageUrl = "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=800&q=80",
                             Name = "Blush Dried Peony Wreath",
                             Price = 84.99m,
                             StockQuantity = 12
@@ -351,7 +354,7 @@ namespace Skinet.Api.Migrations
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
                             Description = "Preserved pink hydrangeas in a keepsake gift box - ready to display forever.",
-                            ImageUrl = "https://images.unsplash.com/photo-1591886960571-74d43a9d4166?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1559181567-c3190900f8b5?auto=format&fit=crop&w=800&q=80",
                             Name = "Pink Preserved Hydrangea Box",
                             Price = 54.99m,
                             StockQuantity = 18

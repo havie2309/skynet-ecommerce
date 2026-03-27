@@ -1,1 +1,85 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --pink:        #e8609a;
+  --pink-light:  #fde8f2;
+  --pink-mid:    #fbc8e0;
+  --blue-light:  #dff0fb;
+  --blue-mid:    #b8dcf5;
+  --cream:       #fffaf8;
+  --text-dark:   #2e1f2b;
+  --text-mid:    #6b4e63;
+  --text-soft:   #a67f97;
+  --radius-pill: 999px;
+  --radius-card: 24px;
+  --radius-sm:   14px;
+  --shadow-soft: 0 8px 32px rgba(232, 96, 154, 0.10);
+  --shadow-card: 0 16px 48px rgba(232, 96, 154, 0.12);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+a { color: var(--pink); }
+
+button, input, select, textarea {
+  font-family: 'Nunito', sans-serif;
+}
+
+.form-select, .form-control {
+  border-radius: var(--radius-sm) !important;
+  border: 2px solid var(--pink-mid) !important;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  color: var(--text-dark);
+  background: #fff;
+  padding: 0.6rem 0.9rem;
+  min-height: 46px;
+  width: 100%;
+  transition: border-color 0.18s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--pink) !important;
+    box-shadow: 0 0 0 3px rgba(232, 96, 154, 0.15) !important;
+  }
+}
+
+.btn {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 0.65rem 1.4rem;
+  transition: all 0.18s ease;
+  cursor: pointer;
+}
+
+.btn-outline-secondary {
+  border: 2px solid var(--pink-mid);
+  background: #fff;
+  color: var(--pink);
+
+  &:hover:not(:disabled) {
+    background: var(--pink-light);
+    border-color: var(--pink);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}

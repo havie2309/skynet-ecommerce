@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Skinet.Api.Data;
@@ -11,9 +12,11 @@ using Skinet.Api.Data;
 namespace Skinet.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331055910_FixSevenImages")]
+    partial class FixSevenImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,7 +310,7 @@ namespace Skinet.Api.Migrations
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
                             Description = "A handcrafted wreath of dried blush peonies and eucalyptus for your front door.",
-                            ImageUrl = "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1599598425947-5202edd56fdb?auto=format&fit=crop&w=800&q=80",
                             Name = "Blush Dried Peony Wreath",
                             Price = 84.99m,
                             StockQuantity = 12
@@ -318,7 +321,7 @@ namespace Skinet.Api.Migrations
                             Brand = "EverBloom",
                             Category = "Dried & Preserved",
                             Description = "Bright strawflowers in pink, peach and cream - dried to perfection and long-lasting.",
-                            ImageUrl = "https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80",
                             Name = "Dried Strawflower Bouquet",
                             Price = 26.99m,
                             StockQuantity = 40
@@ -351,7 +354,7 @@ namespace Skinet.Api.Migrations
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
                             Description = "Preserved pink hydrangeas in a keepsake gift box - ready to display forever.",
-                            ImageUrl = "https://images.unsplash.com/photo-1591886960571-74d43a9d4166?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
                             Name = "Pink Preserved Hydrangea Box",
                             Price = 54.99m,
                             StockQuantity = 18

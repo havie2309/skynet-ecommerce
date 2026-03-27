@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Skinet.Api.Data;
@@ -11,9 +12,11 @@ using Skinet.Api.Data;
 namespace Skinet.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331054603_ExpandFlowerCatalog")]
+    partial class ExpandFlowerCatalog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,7 +156,7 @@ namespace Skinet.Api.Migrations
                             Brand = "PetalCo",
                             Category = "Fresh Bouquets",
                             Description = "A cheerful mix of pink, peach and cream tulips bundled in a cloud of baby's breath.",
-                            ImageUrl = "https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1593957261936-31d7bcada2a9?auto=format&fit=crop&w=800&q=80",
                             Name = "Pastel Tulip Bunch",
                             Price = 34.99m,
                             StockQuantity = 40
@@ -164,7 +167,7 @@ namespace Skinet.Api.Migrations
                             Brand = "BloomHaus",
                             Category = "Fresh Bouquets",
                             Description = "Pure white oriental lilies arranged with eucalyptus for a clean, minimal look.",
-                            ImageUrl = "https://images.unsplash.com/photo-1496062031456-07b8f162a322?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1560717845-968823efbee1?auto=format&fit=crop&w=800&q=80",
                             Name = "White Lily Elegance",
                             Price = 62.99m,
                             StockQuantity = 20
@@ -175,7 +178,7 @@ namespace Skinet.Api.Migrations
                             Brand = "FleurJoy",
                             Category = "Fresh Bouquets",
                             Description = "A lush mixed garden bouquet with roses, ranunculus, and sweet-smelling freesia.",
-                            ImageUrl = "https://images.unsplash.com/photo-1455582916367-25f75bfc6710?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1599598425947-5202edd56fdb?auto=format&fit=crop&w=800&q=80",
                             Name = "Garden Rose Medley",
                             Price = 58.99m,
                             StockQuantity = 22
@@ -186,7 +189,7 @@ namespace Skinet.Api.Migrations
                             Brand = "PetalCo",
                             Category = "Fresh Bouquets",
                             Description = "Bright sunflowers paired with delicate chamomile for a warm, cottagecore feel.",
-                            ImageUrl = "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=80",
                             Name = "Sunflower & Chamomile Bunch",
                             Price = 38.99m,
                             StockQuantity = 35
@@ -207,7 +210,7 @@ namespace Skinet.Api.Migrations
                             Id = 8,
                             Brand = "BloomHaus",
                             Category = "Fresh Bouquets",
-                            Description = "Voluminous baby blue hydrangeas, each head full and lush - a statement piece for any room.",
+                            Description = "Voluminous baby blue hydrangeas, each head full and lush — a statement piece for any room.",
                             ImageUrl = "https://images.unsplash.com/photo-1591886960571-74d43a9d4166?auto=format&fit=crop&w=800&q=80",
                             Name = "Baby Blue Hydrangea Bunch",
                             Price = 44.99m,
@@ -219,7 +222,7 @@ namespace Skinet.Api.Migrations
                             Brand = "PetalCo",
                             Category = "Fresh Bouquets",
                             Description = "Soft peach ranunculus wrapped in vellum paper with a gold twine tie.",
-                            ImageUrl = "https://images.unsplash.com/photo-1444930694458-01babf71870c?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=800&q=80",
                             Name = "Peach Ranunculus Wrap",
                             Price = 42.99m,
                             StockQuantity = 18
@@ -230,7 +233,7 @@ namespace Skinet.Api.Migrations
                             Brand = "FleurJoy",
                             Category = "Fresh Bouquets",
                             Description = "A hand-tied posy of seasonal wildflowers, fresh from the meadow to your doorstep.",
-                            ImageUrl = "https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=800&q=80",
                             Name = "Wildflower Meadow Posy",
                             Price = 27.99m,
                             StockQuantity = 45
@@ -251,7 +254,7 @@ namespace Skinet.Api.Migrations
                             Id = 12,
                             Brand = "PetalCo",
                             Category = "Fresh Bouquets",
-                            Description = "Fresh white daisies with mint green leaves - clean, simple and so cheerful.",
+                            Description = "Fresh white daisies with mint green leaves — clean, simple and so cheerful.",
                             ImageUrl = "https://images.unsplash.com/photo-1502977249166-824b3a8a4d6d?auto=format&fit=crop&w=800&q=80",
                             Name = "Mint & White Daisy Bundle",
                             Price = 24.99m,
@@ -273,8 +276,8 @@ namespace Skinet.Api.Migrations
                             Id = 14,
                             Brand = "EverBloom",
                             Category = "Dried & Preserved",
-                            Description = "Fluffy natural pampas grass stems - perfect for vases and boho home decor.",
-                            ImageUrl = "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?auto=format&fit=crop&w=800&q=80",
+                            Description = "Fluffy natural pampas grass stems — perfect for vases and boho home decor.",
+                            ImageUrl = "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=800&q=80",
                             Name = "Dried Pampas Grass Bunch",
                             Price = 32.99m,
                             StockQuantity = 55
@@ -284,8 +287,8 @@ namespace Skinet.Api.Migrations
                             Id = 15,
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
-                            Description = "A single preserved rose under a glass dome - lasts up to 3 years without water.",
-                            ImageUrl = "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=800&q=80",
+                            Description = "A single preserved rose under a glass dome — lasts up to 3 years without water.",
+                            ImageUrl = "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&w=800&q=80",
                             Name = "Preserved Rose Dome",
                             Price = 69.99m,
                             StockQuantity = 20
@@ -295,8 +298,8 @@ namespace Skinet.Api.Migrations
                             Id = 16,
                             Brand = "EverBloom",
                             Category = "Dried & Preserved",
-                            Description = "Fragrant dried lavender stems tied with twine - aromatherapy meets home decor.",
-                            ImageUrl = "https://images.unsplash.com/photo-1611909023032-2d6b3134ecba?auto=format&fit=crop&w=800&q=80",
+                            Description = "Fragrant dried lavender stems tied with twine — aromatherapy meets home decor.",
+                            ImageUrl = "https://images.unsplash.com/photo-1499578124509-1611b77778e8?auto=format&fit=crop&w=800&q=80",
                             Name = "Dried Lavender Bundle",
                             Price = 18.99m,
                             StockQuantity = 80
@@ -307,7 +310,7 @@ namespace Skinet.Api.Migrations
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
                             Description = "A handcrafted wreath of dried blush peonies and eucalyptus for your front door.",
-                            ImageUrl = "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1542838775-bda000e36f93?auto=format&fit=crop&w=800&q=80",
                             Name = "Blush Dried Peony Wreath",
                             Price = 84.99m,
                             StockQuantity = 12
@@ -317,8 +320,8 @@ namespace Skinet.Api.Migrations
                             Id = 18,
                             Brand = "EverBloom",
                             Category = "Dried & Preserved",
-                            Description = "Bright strawflowers in pink, peach and cream - dried to perfection and long-lasting.",
-                            ImageUrl = "https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?auto=format&fit=crop&w=800&q=80",
+                            Description = "Bright strawflowers in pink, peach and cream — dried to perfection and long-lasting.",
+                            ImageUrl = "https://images.unsplash.com/photo-1455659817273-f96807779a8a?auto=format&fit=crop&w=800&q=80",
                             Name = "Dried Strawflower Bouquet",
                             Price = 26.99m,
                             StockQuantity = 40
@@ -328,7 +331,7 @@ namespace Skinet.Api.Migrations
                             Id = 19,
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
-                            Description = "Delicate preserved baby's breath in a minimal glass jar - effortlessly cute.",
+                            Description = "Delicate preserved baby's breath in a minimal glass jar — effortlessly cute.",
                             ImageUrl = "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=800&q=80",
                             Name = "Preserved Baby's Breath Jar",
                             Price = 22.99m,
@@ -340,7 +343,7 @@ namespace Skinet.Api.Migrations
                             Brand = "EverBloom",
                             Category = "Dried & Preserved",
                             Description = "Soft dried cotton stems for minimalist floral arrangements or boho styling.",
-                            ImageUrl = "https://images.unsplash.com/photo-1444930694458-01babf71870c?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=800&q=80",
                             Name = "Dried Cotton Stem Bundle",
                             Price = 21.99m,
                             StockQuantity = 50
@@ -350,8 +353,8 @@ namespace Skinet.Api.Migrations
                             Id = 21,
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
-                            Description = "Preserved pink hydrangeas in a keepsake gift box - ready to display forever.",
-                            ImageUrl = "https://images.unsplash.com/photo-1591886960571-74d43a9d4166?auto=format&fit=crop&w=800&q=80",
+                            Description = "Preserved pink hydrangeas in a keepsake gift box — ready to display forever.",
+                            ImageUrl = "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&w=800&q=80",
                             Name = "Pink Preserved Hydrangea Box",
                             Price = 54.99m,
                             StockQuantity = 18
@@ -361,8 +364,8 @@ namespace Skinet.Api.Migrations
                             Id = 22,
                             Brand = "EverBloom",
                             Category = "Dried & Preserved",
-                            Description = "Fluffy bunny tail grass stems - impossibly soft and adorable in any arrangement.",
-                            ImageUrl = "https://images.unsplash.com/photo-1455582916367-25f75bfc6710?auto=format&fit=crop&w=800&q=80",
+                            Description = "Fluffy bunny tail grass stems — impossibly soft and adorable in any arrangement.",
+                            ImageUrl = "https://images.unsplash.com/photo-1471086569966-db3eebc25a59?auto=format&fit=crop&w=800&q=80",
                             Name = "Dried Bunny Tail Grass",
                             Price = 16.99m,
                             StockQuantity = 90
@@ -372,8 +375,8 @@ namespace Skinet.Api.Migrations
                             Id = 23,
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
-                            Description = "Real pressed roses and wildflowers in a gold-frame - a piece of living art.",
-                            ImageUrl = "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=800&q=80",
+                            Description = "Real pressed roses and wildflowers in a gold-frame — a piece of living art.",
+                            ImageUrl = "https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=800&q=80",
                             Name = "Vintage Rose Pressed Frame",
                             Price = 78.99m,
                             StockQuantity = 10
@@ -384,7 +387,7 @@ namespace Skinet.Api.Migrations
                             Brand = "EverBloom",
                             Category = "Dried & Preserved",
                             Description = "Silvery lunaria (honesty plant) stems that catch the light beautifully.",
-                            ImageUrl = "https://images.unsplash.com/photo-1471086569966-db3eebc25a59?auto=format&fit=crop&w=800&q=80",
+                            ImageUrl = "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=800&q=80",
                             Name = "Dried Lunaria Moon Stems",
                             Price = 19.99m,
                             StockQuantity = 45
@@ -394,7 +397,7 @@ namespace Skinet.Api.Migrations
                             Id = 25,
                             Brand = "ForeverPetal",
                             Category = "Dried & Preserved",
-                            Description = "A curated mix of dried blush and cream blooms - romantic, timeless and zero maintenance.",
+                            Description = "A curated mix of dried blush and cream blooms — romantic, timeless and zero maintenance.",
                             ImageUrl = "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=80",
                             Name = "Blush & Cream Dried Bouquet",
                             Price = 44.99m,
