@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: snoopy-petal
+    runtime: dotnet
+    region: oregon
+    rootDir: api
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet out/Skinet.Api.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
