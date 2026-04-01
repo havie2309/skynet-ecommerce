@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Skinet.Api.Errors;
 using Skinet.Api.Middleware;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<StripeSettings>(
@@ -91,9 +90,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Redis
-builder.Services.AddSingleton<IConnectionMultiplexer>(
-    ConnectionMultiplexer.Connect(
-        builder.Configuration.GetConnectionString("Redis")!));
+var redisConnection = builder.Configuration.GetConnectionString("Redis");
+if (!string.IsNullOrEmpty(redisConnection))
+{
+    var redisConfig = ConfigurationOptions.Parse(redisConnection);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(
+        ConnectionMultiplexer.Connect(redisConfig));
+}
+else
+{
+    builder.Services.AddSingleton<IConnectionMultiplexer>(
+        ConnectionMultiplexer.Connect("localhost:6379"));
+}
 builder.Services.AddScoped<BasketRepository>();
 builder.Services.AddScoped<ProductCacheService>();
 
@@ -112,7 +120,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = jwtSettings["Audience"],
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero 
+            ClockSkew = TimeSpan.Zero
         };
     });
 
@@ -122,7 +130,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<AppMetrics>();
 builder.Services.AddHealthChecks();
 
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() 
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
                      ?? new[] { "http://localhost:4200" };
 
 builder.Services.AddCors(opt =>
@@ -178,4 +186,3 @@ app.MapControllers();
 app.MapHealthChecks("/health");
 app.Run();
 public partial class Program { }
-
