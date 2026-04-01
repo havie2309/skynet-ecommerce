@@ -38,7 +38,14 @@ export class Checkout implements OnInit {
 
     try {
       const keyResponse = await firstValueFrom(this.paymentService.getPublishableKey());
-      this.stripe = await loadStripe(keyResponse.publishableKey);
+      const publishableKey = keyResponse.publishableKey?.trim();
+
+      if (!publishableKey) {
+        this.error = 'Stripe publishable key is not configured.';
+        return;
+      }
+
+      this.stripe = await loadStripe(publishableKey);
 
       if (!this.stripe) {
         this.error = 'Stripe failed to load';
@@ -48,9 +55,13 @@ export class Checkout implements OnInit {
       this.elements = this.stripe.elements();
       this.card = this.elements.create('card');
       this.card.mount(this.cardElementRef.nativeElement);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Checkout init failed:', error);
-      this.error = 'Failed to initialize payment form';
+      this.error =
+        error?.error?.message ||
+        error?.error?.details ||
+        error?.message ||
+        'Failed to initialize payment form';
     }
   }
 

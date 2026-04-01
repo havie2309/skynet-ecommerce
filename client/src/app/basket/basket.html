@@ -5,9 +5,7 @@
         <div class="basket-header-card">
           <span class="basket-kicker">Your Cart</span>
           <h1>Review your picks before checkout.</h1>
-          <p>
-            Double-check your items, pricing, and basket total before moving to secure payment.
-          </p>
+          <p>Double-check your items, pricing, and basket total before moving to secure payment.</p>
         </div>
 
         <div class="basket-items-card">
@@ -25,22 +23,18 @@
                     <h3>{{ item.productName }}</h3>
                     <p class="item-meta">Unit price: ${{ item.price | number:'1.2-2' }}</p>
                   </div>
-
-                  <button
-                    class="remove-button"
-                    (click)="removeItem(item.productId)">
+                  <button class="remove-button" (click)="basketService.removeItem(item.productId)">
                     Remove
                   </button>
                 </div>
 
                 <div class="basket-item-bottom">
-                  <div class="quantity-pill">
-                    Qty {{ item.quantity }}
+                  <div class="qty-controls">
+                    <button class="qty-btn" (click)="basketService.decrementItem(item.productId)">−</button>
+                    <span class="qty-value">{{ item.quantity }}</span>
+                    <button class="qty-btn" (click)="basketService.incrementItem(item.productId)">+</button>
                   </div>
-
-                  <strong class="subtotal">
-                    ${{ item.price * item.quantity | number:'1.2-2' }}
-                  </strong>
+                  <strong class="subtotal">${{ item.price * item.quantity | number:'1.2-2' }}</strong>
                 </div>
               </div>
             </article>
@@ -57,7 +51,7 @@
           <div class="summary-breakdown">
             <div>
               <span>Items</span>
-              <strong>{{ basketService.basket()!.items.length }}</strong>
+              <strong>{{ basketService.itemCount() }}</strong>
             </div>
             <div>
               <span>Estimated shipping</span>
@@ -65,13 +59,8 @@
             </div>
           </div>
 
-          <a class="primary-checkout" routerLink="/checkout">
-            Proceed to Checkout
-          </a>
-
-          <a class="secondary-link" routerLink="/shop">
-            Continue Shopping
-          </a>
+          <a class="primary-checkout" routerLink="/checkout">Proceed to Checkout</a>
+          <a class="secondary-link" routerLink="/shop">Continue Shopping</a>
         </div>
       </aside>
     </div>

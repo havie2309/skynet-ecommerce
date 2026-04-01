@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BasketService } from '../core/services/basket';
@@ -11,22 +11,13 @@ import { BasketService } from '../core/services/basket';
   styleUrl: './basket.scss'
 })
 export class Basket implements OnInit {
-  constructor(
-    public basketService: BasketService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(public basketService: BasketService) {}
 
   ngOnInit() {
-    const id = localStorage.getItem('basket_id');
-    if (id) {
-      this.basketService.getBasket(id);
-      setTimeout(() => this.cdr.detectChanges(), 300);
+    if (!this.basketService.basket()) {
+      const id = localStorage.getItem('basket_id');
+      if (id) this.basketService.getBasket(id);
     }
-  }
-
-  removeItem(productId: number) {
-    this.basketService.removeItem(productId);
-    this.cdr.detectChanges();
   }
 
   get total() {

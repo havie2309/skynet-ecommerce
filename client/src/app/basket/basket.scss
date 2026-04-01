@@ -154,16 +154,40 @@
   gap: 1rem;
 }
 
-.quantity-pill {
+.qty-controls {
   display: inline-flex;
   align-items: center;
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
-  background: #fde8f2;
-  color: #e8609a;
-  font-size: 0.88rem;
-  font-weight: 800;
+  gap: 0;
   border: 2px solid #fbc8e0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #fde8f2;
+}
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: #e8609a;
+  font-size: 1.2rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  font-family: 'Nunito', sans-serif;
+
+  &:hover { background: #fbc8e0; }
+}
+
+.qty-value {
+  min-width: 32px;
+  text-align: center;
+  color: #e8609a;
+  font-size: 0.95rem;
+  font-weight: 900;
 }
 
 .subtotal {

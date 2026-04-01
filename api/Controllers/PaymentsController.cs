@@ -39,6 +39,13 @@ public class PaymentsController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetPublishableKey()
     {
+        if (!HasValidStripePublishableKey())
+        {
+            return this.ApiError(
+                StatusCodes.Status500InternalServerError,
+                "Stripe publishable key is not configured.");
+        }
+
         return Ok(new { publishableKey = _stripeSettings.PublishableKey });
     }
 
@@ -46,6 +53,13 @@ public class PaymentsController : ControllerBase
     public async Task<ActionResult<PaymentIntentResponseDto>> CreatePaymentIntent(CreatePaymentIntentDto dto)
     {
         _metrics.Increment("payments.create_intent.attempt");
+
+        if (!HasValidStripeSecretKey())
+        {
+            return this.ApiError(
+                StatusCodes.Status500InternalServerError,
+                "Stripe secret key is not configured.");
+        }
 
         var db = _redis.GetDatabase();
         var basketJson = await db.StringGetAsync(dto.BasketId);
@@ -101,5 +115,17 @@ public class PaymentsController : ControllerBase
                 StatusCodes.Status500InternalServerError,
                 "Unable to create payment intent.");
         }
+    }
+
+    private bool HasValidStripePublishableKey()
+    {
+        return !string.IsNullOrWhiteSpace(_stripeSettings.PublishableKey) &&
+               !_stripeSettings.PublishableKey.Contains("REPLACE_LOCALLY", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool HasValidStripeSecretKey()
+    {
+        return !string.IsNullOrWhiteSpace(_stripeSettings.SecretKey) &&
+               !_stripeSettings.SecretKey.Contains("REPLACE_LOCALLY", StringComparison.OrdinalIgnoreCase);
     }
 }

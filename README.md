@@ -1,107 +1,207 @@
-# Skinet E-Commerce
+# Snoopy Petal
 
-A full-stack e-commerce application built with .NET 8 and Angular.
+A full-stack flower e-commerce app built with ASP.NET Core and Angular. Customers can browse bouquets, manage a basket, place orders, and complete card payments with Stripe.
+
+## Features
+
+- Browse products with filtering and pagination
+- Register, log in, and manage authenticated sessions
+- Add and remove items from the basket
+- Place orders and view order history
+- Pay securely with Stripe card checkout
+- Admin product and order management flows
 
 ## Tech Stack
 
-**Backend**
-- .NET 8 Web API
-- PostgreSQL — relational database
-- Redis — caching & cart storage
-- Entity Framework Core — ORM & migrations
-- JWT — authentication
-- BCrypt — password hashing
-- Stripe — payments
-- Swagger — API documentation
+### Backend
 
-**Frontend**
+- ASP.NET Core 8 Web API
+- Entity Framework Core
+- PostgreSQL
+- Redis
+- JWT authentication
+- Stripe.NET
+- Swagger
+
+### Frontend
+
 - Angular
+- TypeScript
+- SCSS
 - Bootstrap
 
-**Infrastructure**
-- Docker & Docker Compose
+### Deployment
 
----
+- Render for the API
+- Netlify for the frontend
 
-## Setup
+## Project Structure
+
+```text
+api/                 ASP.NET Core API
+client/              Angular frontend
+Skinet.Api.Tests/    Backend test project
+docs/                Project documentation
+workflows/           CI configuration
+```
+
+## Local Development
 
 ### Prerequisites
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org)
 
-### 1. Clone the repo
+- .NET 8 SDK
+- Node.js
+- Docker Desktop
+
+### 1. Clone the repository
+
 ```bash
-git clone https://github.com/yourusername/skynet-ecommerce.git
+git clone https://github.com/your-username/skynet-ecommerce.git
 cd skynet-ecommerce
 ```
 
-### 2. Start Docker (Postgres + Redis)
+### 2. Start infrastructure services
+
 ```bash
 docker compose up -d
 ```
 
-### 3. Run the API
+This starts PostgreSQL and Redis for local development.
+
+### 3. Configure backend settings
+
+Update `api/appsettings.Development.json` with working local values for:
+
+- `ConnectionStrings:DefaultConnection`
+- `ConnectionStrings:Redis`
+- `JwtSettings`
+- `StripeSettings:PublishableKey`
+- `StripeSettings:SecretKey`
+- `StripeSettings:WebhookSecret`
+
+### 4. Run the API
+
 ```bash
 cd api
 dotnet ef database update
 dotnet run
 ```
 
-API will be available at `http://localhost:5283`
-Swagger UI at `http://localhost:5283/swagger`
+The API runs at `http://localhost:5283`.
 
-### 4. Run the Angular client
+Swagger UI:
+
+```text
+http://localhost:5283/swagger
+```
+
+### 5. Run the frontend
+
 ```bash
 cd client
 npm install
-ng serve
+npm start
 ```
 
-Client will be available at `http://localhost:4200`
+The Angular app runs at `http://localhost:4200`.
 
-> See `client/README.md` for full Angular CLI documentation.
+## Stripe Checkout Setup
 
----
+Card checkout depends on valid Stripe keys. If checkout fails to initialize, first verify the backend has working Stripe configuration.
 
-## API Endpoints
+### Required backend values
 
-### Account
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/account/register` | Register a new user | No |
-| POST | `/api/account/login` | Login and receive JWT token | No |
+- `StripeSettings__PublishableKey`
+- `StripeSettings__SecretKey`
+- `StripeSettings__WebhookSecret`
 
-### Products
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/products` | Get all products (paginated) | No |
-| GET | `/api/products/{id}` | Get product by ID | No |
+For local development these can live in `appsettings.Development.json`.
 
-#### Product query parameters
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `search` | string | - | Filter by product name |
-| `minPrice` | decimal | - | Filter by minimum price |
-| `maxPrice` | decimal | - | Filter by maximum price |
-| `page` | int | 1 | Page number |
-| `pageSize` | int | 10 | Results per page |
+For production on Render, set them as environment variables in the Render dashboard.
 
-#### Example response — GET `/api/products`
-```json
-{
-  "totalCount": 2,
-  "page": 1,
-  "pageSize": 10,
-  "data": [
-    {
-      "id": 1,
-      "name": "Laptop",
-      "description": "Gaming laptop",
-      "price": 1200,
-      "stockQuantity": 10,
-      "imageUrl": null
-    }
-  ]
-}
+## Deployment Notes
+
+### Render
+
+The API is deployed from the `api/` project. After pushing changes to GitHub, Render redeploys from the latest commit.
+
+Important production environment variables include:
+
+- `ASPNETCORE_ENVIRONMENT=Production`
+- `ConnectionStrings__DefaultConnection`
+- `ConnectionStrings__Redis`
+- `JwtSettings__SecretKey`
+- `JwtSettings__Issuer`
+- `JwtSettings__Audience`
+- `StripeSettings__PublishableKey`
+- `StripeSettings__SecretKey`
+- `StripeSettings__WebhookSecret`
+
+### Netlify
+
+The frontend is deployed from the Angular app. If your frontend build points to the Render API, make sure the production API URL is correct in the Angular environment configuration or injected through your deployment setup.
+
+## API Overview
+
+### Public endpoints
+
+- `POST /api/account/register`
+- `POST /api/account/login`
+- `GET /api/products`
+- `GET /api/products/{id}`
+- `GET /api/payments/publishable-key`
+
+### Authenticated endpoints
+
+- `POST /api/payments/create-payment-intent`
+- `POST /api/orders`
+- `GET /api/orders`
+- Basket and profile endpoints that require a signed-in user flow
+
+## Build Commands
+
+### Backend
+
+```bash
+dotnet build api/Skinet.Api.csproj
 ```
+
+### Frontend
+
+```bash
+cd client
+npm run build
+```
+
+## Screenshots
+
+Adding screenshots is a good idea, especially if you are showing the project on GitHub for hiring, school, or portfolio use.
+
+The most useful images to add are:
+
+- Home or product listing page
+- Product detail page
+- Basket page
+- Checkout page
+- Orders page
+- Admin dashboard if you want to show management features
+
+You can place them in a folder like `docs/screenshots/` and reference them in this README.
+
+## Recommended Screenshot Section
+
+Once you have images, add a section like this:
+
+```md
+## Screenshots
+
+![Home page](docs/screenshots/home.png)
+![Basket page](docs/screenshots/basket.png)
+![Checkout page](docs/screenshots/checkout.png)
+```
+
+## Notes
+
+- Push code changes to GitHub before expecting Render or Netlify to deploy them.
+- Production checkout will not work unless Stripe keys are configured on Render.
+- This repository currently has both backend and frontend code in one project workspace.
