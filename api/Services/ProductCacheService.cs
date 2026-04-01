@@ -15,25 +15,34 @@ public class ProductCacheService
 
     public async Task<T?> GetAsync<T>(string key)
     {
-        var db = _redis.GetDatabase();
-        var cached = await db.StringGetAsync(key);
-
-        if (cached.IsNullOrEmpty)
-            return default;
-
-        return JsonSerializer.Deserialize<T>(cached!);
+        try
+        {
+            var db = _redis.GetDatabase();
+            var cached = await db.StringGetAsync(key);
+            if (cached.IsNullOrEmpty) return default;
+            return JsonSerializer.Deserialize<T>(cached!);
+        }
+        catch { return default; }
     }
 
     public async Task SetAsync<T>(string key, T value)
     {
-        var db = _redis.GetDatabase();
-        var json = JsonSerializer.Serialize(value);
-        await db.StringSetAsync(key, json, _cacheDuration);
+        try
+        {
+            var db = _redis.GetDatabase();
+            var json = JsonSerializer.Serialize(value);
+            await db.StringSetAsync(key, json, _cacheDuration);
+        }
+        catch { }
     }
 
     public async Task RemoveAsync(string key)
     {
-        var db = _redis.GetDatabase();
-        await db.KeyDeleteAsync(key);
+        try
+        {
+            var db = _redis.GetDatabase();
+            await db.KeyDeleteAsync(key);
+        }
+        catch { }
     }
 }
