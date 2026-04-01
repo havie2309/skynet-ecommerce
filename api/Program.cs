@@ -90,18 +90,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Redis
-var redisConnection = builder.Configuration.GetConnectionString("Redis");
-if (!string.IsNullOrEmpty(redisConnection))
-{
-    var redisConfig = ConfigurationOptions.Parse(redisConnection);
-    builder.Services.AddSingleton<IConnectionMultiplexer>(
-        ConnectionMultiplexer.Connect(redisConfig));
-}
-else
-{
-    builder.Services.AddSingleton<IConnectionMultiplexer>(
-        ConnectionMultiplexer.Connect("localhost:6379"));
-}
+var redisConnection = builder.Configuration.GetConnectionString("Redis")
+    ?? throw new InvalidOperationException("Redis connection string is not configured. Set ConnectionStrings__Redis in environment variables.");
+var redisConfig = ConfigurationOptions.Parse(redisConnection);
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+    ConnectionMultiplexer.Connect(redisConfig));
 builder.Services.AddScoped<BasketRepository>();
 builder.Services.AddScoped<ProductCacheService>();
 
