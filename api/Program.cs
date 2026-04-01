@@ -93,6 +93,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var redisConnection = builder.Configuration.GetConnectionString("Redis")
     ?? throw new InvalidOperationException("Redis connection string is not configured. Set ConnectionStrings__Redis in environment variables.");
 var redisConfig = ConfigurationOptions.Parse(redisConnection);
+redisConfig.AbortOnConnectFail = false;
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(redisConfig));
 builder.Services.AddScoped<BasketRepository>();
