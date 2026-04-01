@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './layout/navbar/navbar';
 import { ToastComponent } from './shared/toast/toast';
+import { PetalRain } from './shared/petal-rain/petal-rain';
 import { AuthService } from './core/services/auth';
 import { BasketService } from './core/services/basket';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, Navbar, ToastComponent],
+  imports: [RouterOutlet, Navbar, ToastComponent, PetalRain],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

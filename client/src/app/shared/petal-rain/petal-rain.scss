@@ -1,0 +1,27 @@
+.petal-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: -20px;
+  left: var(--left);
+  width: var(--size);
+  height: var(--size);
+  background: var(--color);
+  border-radius: var(--radius);
+  opacity: 0;
+  animation: petalFall var(--dur) var(--delay) linear infinite;
+}
+
+@keyframes petalFall {
+  0%   { transform: translateY(0)    translateX(0)              rotate(0deg);   opacity: 0; }
+  8%   {                                                                          opacity: 0.75; }
+  50%  { transform: translateY(50vh) translateX(calc(var(--drift) * 0.5))  rotate(180deg); }
+  92%  {                                                                          opacity: 0.4; }
+  100% { transform: translateY(105vh) translateX(var(--drift))   rotate(720deg); opacity: 0; }
+}

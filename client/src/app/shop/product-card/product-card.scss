@@ -80,6 +80,42 @@
   transform: translateX(-50%) translateY(0);
 }
 
+.wishlist-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #cba0b8;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1;
+  opacity: 0;
+  transform: scale(0.8);
+
+  &--active {
+    color: #e8609a;
+    opacity: 1 !important;
+    transform: scale(1) !important;
+  }
+
+  &:hover { transform: scale(1.15) !important; color: #e8609a; }
+}
+
+.market-card:hover .wishlist-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .market-card-body {
   padding: 1rem 1rem 1.1rem;
   display: flex;

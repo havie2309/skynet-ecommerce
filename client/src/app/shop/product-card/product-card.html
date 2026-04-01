@@ -9,6 +9,13 @@
       (click)="addToBasket($event)">
       {{ added ? '✓ Added' : '+ Basket' }}
     </button>
+    <button
+      class="wishlist-btn"
+      [class.wishlist-btn--active]="wishlist.isWishlisted(product.id)"
+      (click)="toggleWishlist($event)"
+      [attr.aria-label]="wishlist.isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'">
+      {{ wishlist.isWishlisted(product.id) ? '♥' : '♡' }}
+    </button>
   </a>
 
   <div class="market-card-body">

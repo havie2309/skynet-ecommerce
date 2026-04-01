@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Product } from '../../models/product';
 import { BasketService } from '../../core/services/basket';
+import { WishlistService } from '../../core/services/wishlist';
 
 @Component({
   selector: 'app-product-card',
@@ -15,7 +16,10 @@ export class ProductCard {
   @Input() product!: Product;
   added = false;
 
-  constructor(private basketService: BasketService) {}
+  constructor(
+    private basketService: BasketService,
+    public wishlist: WishlistService
+  ) {}
 
   addToBasket(event: Event) {
     event.preventDefault();
@@ -23,5 +27,11 @@ export class ProductCard {
     this.basketService.addItemToBasket(this.product);
     this.added = true;
     setTimeout(() => this.added = false, 2000);
+  }
+
+  toggleWishlist(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.wishlist.toggle(this.product.id);
   }
 }
