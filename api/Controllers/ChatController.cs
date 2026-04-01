@@ -44,23 +44,23 @@ public class ChatController : ControllerBase
 
         var catalog = JsonSerializer.Serialize(products);
 
-        var prompt = $"""
+        var prompt = $$"""
             You are a warm, friendly florist assistant for Snoopy Petal — a boutique flower shop.
             Help customers find the perfect flowers based on their needs, occasion, and budget.
 
             Our current in-stock catalog:
-            {catalog}
+            {{catalog}}
 
-            Customer message: {request.Message}
+            Customer message: {{request.Message}}
 
             Respond with a JSON object in this exact structure:
-            {{
+            {
               "message": "A warm 2-3 sentence personal response explaining your suggestions",
               "tone": "one of: romantic, apology, celebration, sympathy, friendship, gratitude, birthday",
               "suggestions": [
-                {{ "productId": 1, "reason": "Short reason why this fits (1 sentence)" }}
+                { "productId": 1, "reason": "Short reason why this fits (1 sentence)" }
               ]
-            }}
+            }
 
             Rules:
             - Suggest 1 to 3 products only
