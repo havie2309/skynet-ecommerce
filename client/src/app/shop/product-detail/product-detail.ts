@@ -30,7 +30,12 @@ export class ProductDetail implements OnInit {
     });
   }
 
+  added = false;
+
   addToBasket() {
-    if (this.product) this.basketService.addItemToBasket(this.product);
+    if (!this.product) return;
+    this.basketService.addItemToBasket(this.product);
+    this.added = true;
+    setTimeout(() => this.added = false, 2000);
   }
 }

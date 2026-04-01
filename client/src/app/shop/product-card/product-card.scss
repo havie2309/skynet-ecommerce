@@ -49,6 +49,37 @@
   transform: scale(1.04);
 }
 
+.quick-add {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  opacity: 0;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  background: #e8609a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(232, 96, 154, 0.4);
+  z-index: 1;
+
+  &--done {
+    background: #22845a;
+    box-shadow: 0 4px 16px rgba(34, 132, 90, 0.4);
+  }
+}
+
+.market-card:hover .quick-add {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .market-card-body {
   padding: 1rem 1rem 1.1rem;
   display: flex;

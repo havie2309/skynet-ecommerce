@@ -209,6 +209,13 @@
   color: #fff;
 
   &:hover { background: #d44f8a; color: #fff; }
+
+  &--added {
+    background: #22845a;
+    &:hover { background: #22845a; }
+  }
+
+  &:disabled { cursor: default; }
 }
 
 .secondary-action {

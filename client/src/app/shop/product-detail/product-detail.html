@@ -51,7 +51,9 @@
         </div>
 
         <div class="detail-actions">
-          <button class="primary-action" (click)="addToBasket()">Add to Basket</button>
+          <button class="primary-action" [class.primary-action--added]="added" (click)="addToBasket()" [disabled]="added">
+            {{ added ? '✓ Added to Basket' : 'Add to Basket' }}
+          </button>
           <a routerLink="/shop" class="secondary-action">Back to Shop</a>
         </div>
       </div>

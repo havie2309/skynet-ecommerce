@@ -358,3 +358,67 @@
   .product-grid { grid-template-columns: 1fr; }
   .pagination-bar { flex-direction: column; }
 }
+
+// ── Skeleton Loading ──────────────────────────────────
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-card {
+  background: #fff;
+  border: 2px solid #fbc8e0;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.skeleton-img {
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(90deg, #fde8f2 25%, #fff0f7 50%, #fde8f2 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fde8f2 25%, #fff0f7 50%, #fde8f2 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  width: 100%;
+
+  &--short { width: 40%; }
+  &--med   { width: 70%; }
+}
+
+.skeleton-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+
+.skeleton-price {
+  height: 20px;
+  width: 70px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fde8f2 25%, #fff0f7 50%, #fde8f2 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-btn {
+  height: 34px;
+  width: 100px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fde8f2 25%, #fff0f7 50%, #fde8f2 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}

@@ -3,6 +3,12 @@
     <img
       [src]="product.imageUrl || 'https://placehold.co/600x600?text=Product'"
       [alt]="product.name" />
+    <button
+      class="quick-add"
+      [class.quick-add--done]="added"
+      (click)="addToBasket($event)">
+      {{ added ? '✓ Added' : '+ Basket' }}
+    </button>
   </a>
 
   <div class="market-card-body">
@@ -17,19 +23,14 @@
       <a [routerLink]="['/shop', product.id]">{{ product.name }}</a>
     </h3>
 
-    <p class="description">
-      {{ product.description }}
-    </p>
+    <p class="description">{{ product.description }}</p>
 
     <div class="price-row">
       <div>
         <span class="price-label">Starting from</span>
         <strong>${{ product.price | number:'1.2-2' }}</strong>
       </div>
-
-      <a [routerLink]="['/shop', product.id]" class="details-link">
-        View Details
-      </a>
+      <a [routerLink]="['/shop', product.id]" class="details-link">View Details</a>
     </div>
   </div>
 </article>

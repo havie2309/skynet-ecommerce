@@ -15,6 +15,8 @@ import { ProductCard } from '../product-card/product-card';
 export class ProductList implements OnInit {
   products: Product[] = [];
   totalCount = 0;
+  loading = false;
+  skeletons = Array(8);
 
   filters: ProductFilters = {
     brands: [],
@@ -67,12 +69,17 @@ export class ProductList implements OnInit {
   }
 
   loadProducts() {
+    this.loading = true;
     this.productService.getProducts(this.queryParams).subscribe({
       next: res => {
         this.products = [...res.data];
         this.totalCount = res.totalCount;
+        this.loading = false;
       },
-      error: err => console.error('API error:', err)
+      error: err => {
+        console.error('API error:', err);
+        this.loading = false;
+      }
     });
   }
 

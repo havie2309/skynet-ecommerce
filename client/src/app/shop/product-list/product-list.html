@@ -156,10 +156,28 @@
       </div>
 
       <div class="product-grid">
-        @for (p of products; track p.id) {
-          <div class="product-grid-item">
-            <app-product-card [product]="p"></app-product-card>
-          </div>
+        @if (loading) {
+          @for (s of skeletons; track $index) {
+            <div class="skeleton-card">
+              <div class="skeleton-img"></div>
+              <div class="skeleton-body">
+                <div class="skeleton-line skeleton-line--short"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line skeleton-line--med"></div>
+                <div class="skeleton-footer">
+                  <div class="skeleton-price"></div>
+                  <div class="skeleton-btn"></div>
+                </div>
+              </div>
+            </div>
+          }
+        }
+        @if (!loading) {
+          @for (p of products; track p.id) {
+            <div class="product-grid-item">
+              <app-product-card [product]="p"></app-product-card>
+            </div>
+          }
         }
       </div>
 
