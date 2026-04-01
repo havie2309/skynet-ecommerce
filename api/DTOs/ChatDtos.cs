@@ -15,15 +15,19 @@ public record ChatAiResponse(
     [property: JsonPropertyName("suggestions")] List<ChatSuggestion> Suggestions
 );
 
-// OpenAI response shape
-public record OpenAiMessage(
-    [property: JsonPropertyName("content")] string Content
+// Gemini response shape
+public record GeminiPart(
+    [property: JsonPropertyName("text")] string Text
 );
 
-public record OpenAiChoice(
-    [property: JsonPropertyName("message")] OpenAiMessage Message
+public record GeminiContent(
+    [property: JsonPropertyName("parts")] List<GeminiPart> Parts
 );
 
-public record OpenAiResponse(
-    [property: JsonPropertyName("choices")] List<OpenAiChoice> Choices
+public record GeminiCandidate(
+    [property: JsonPropertyName("content")] GeminiContent Content
+);
+
+public record GeminiResponse(
+    [property: JsonPropertyName("candidates")] List<GeminiCandidate> Candidates
 );

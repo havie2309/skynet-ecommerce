@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using Skinet.Api.Data;
 using Skinet.Api.DTOs;
@@ -34,7 +33,7 @@ public class ChatController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Message))
             return BadRequest("Message is required.");
 
-        var apiKey = _config["OpenAI:ApiKey"];
+        var apiKey = _config["Gemini:ApiKey"];
         if (string.IsNullOrEmpty(apiKey))
             return StatusCode(503, new { message = "AI assistant is not configured yet." });
 
@@ -45,12 +44,14 @@ public class ChatController : ControllerBase
 
         var catalog = JsonSerializer.Serialize(products);
 
-        var systemPrompt = $"""
+        var prompt = $"""
             You are a warm, friendly florist assistant for Snoopy Petal — a boutique flower shop.
             Help customers find the perfect flowers based on their needs, occasion, and budget.
 
             Our current in-stock catalog:
             {catalog}
+
+            Customer message: {request.Message}
 
             Respond with a JSON object in this exact structure:
             {{
@@ -67,40 +68,42 @@ public class ChatController : ControllerBase
             - Respect any budget the customer mentions
             - Match tone to the occasion
             - Be warm and personal, not generic
-            - Return only valid JSON, no markdown
+            - Return only valid JSON with no markdown, no code blocks
             """;
 
         try
         {
             var client = _httpFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", apiKey);
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}";
 
             var body = new
             {
-                model = "gpt-4o-mini",
-                messages = new[]
+                contents = new[]
                 {
-                    new { role = "system", content = systemPrompt },
-                    new { role = "user",   content = request.Message }
+                    new
+                    {
+                        parts = new[] { new { text = prompt } }
+                    }
                 },
-                response_format = new { type = "json_object" },
-                temperature = 0.75,
-                max_tokens = 600
+                generationConfig = new
+                {
+                    temperature = 0.75,
+                    maxOutputTokens = 600,
+                    responseMimeType = "application/json"
+                }
             };
 
-            var response = await client.PostAsJsonAsync(
-                "https://api.openai.com/v1/chat/completions", body);
+            var response = await client.PostAsJsonAsync(url, body);
 
             if (!response.IsSuccessStatusCode)
             {
                 var err = await response.Content.ReadAsStringAsync();
-                _logger.LogError("OpenAI error: {Error}", err);
+                _logger.LogError("Gemini error: {Error}", err);
                 return StatusCode(502, new { message = "AI service temporarily unavailable." });
             }
 
-            var openAiResult = await response.Content.ReadFromJsonAsync<OpenAiResponse>();
-            var content = openAiResult?.Choices.FirstOrDefault()?.Message.Content;
+            var geminiResult = await response.Content.ReadFromJsonAsync<GeminiResponse>();
+            var content = geminiResult?.Candidates.FirstOrDefault()?.Content.Parts.FirstOrDefault()?.Text;
 
             if (string.IsNullOrEmpty(content))
                 return StatusCode(502, new { message = "No response from AI." });
