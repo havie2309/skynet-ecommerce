@@ -1,0 +1,70 @@
+<div class="chat-wrap">
+  <!-- Toggle button -->
+  <button class="chat-fab" (click)="toggle()" [class.chat-fab--open]="open" aria-label="Open florist assistant">
+    @if (open) {
+      <span>✕</span>
+    } @else {
+      <span class="fab-icon">🌸</span>
+      <span class="fab-label">Ask Florist</span>
+    }
+  </button>
+
+  <!-- Chat window -->
+  @if (open) {
+    <div class="chat-window">
+      <div class="chat-header">
+        <div class="chat-avatar">🌸</div>
+        <div>
+          <strong>Snoopy Petal AI</strong>
+          <span>Your personal florist</span>
+        </div>
+      </div>
+
+      <div class="chat-messages" #messagesEl>
+        @for (msg of messages; track $index) {
+          <div class="msg-row" [class.msg-row--user]="msg.role === 'user'">
+
+            @if (msg.loading) {
+              <div class="bubble bubble--assistant bubble--loading">
+                <span></span><span></span><span></span>
+              </div>
+            } @else if (msg.text) {
+              <div class="bubble" [class.bubble--user]="msg.role === 'user'" [class.bubble--assistant]="msg.role === 'assistant'">
+                {{ msg.text }}
+              </div>
+            } @else if (msg.response) {
+              <div class="bubble bubble--assistant">
+                <div class="tone-badge">{{ toneEmoji(msg.response.tone) }} {{ msg.response.tone }}</div>
+                <p>{{ msg.response.message }}</p>
+              </div>
+              @for (s of msg.response.suggestions; track s.productId) {
+                <div class="suggestion-card">
+                  <img [src]="s.product.imageUrl || 'https://placehold.co/64x64'" [alt]="s.product.name" />
+                  <div class="suggestion-info">
+                    <strong>{{ s.product.name }}</strong>
+                    <span class="suggestion-reason">{{ s.reason }}</span>
+                    <div class="suggestion-footer">
+                      <strong class="suggestion-price">${{ s.product.price | number:'1.2-2' }}</strong>
+                      <button class="suggestion-add" (click)="addToBasket(s.product)">+ Basket</button>
+                    </div>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <div class="chat-input-row">
+        <textarea
+          class="chat-input"
+          [(ngModel)]="input"
+          (keydown)="onKeydown($event)"
+          placeholder="e.g. flowers for my mum, she loves purple, ~$40"
+          rows="2">
+        </textarea>
+        <button class="chat-send" (click)="send()" [disabled]="!input.trim()">Send</button>
+      </div>
+    </div>
+  }
+</div>

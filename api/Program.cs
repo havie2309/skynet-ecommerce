@@ -85,6 +85,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// HttpClient (for OpenAI)
+builder.Services.AddHttpClient();
+
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
