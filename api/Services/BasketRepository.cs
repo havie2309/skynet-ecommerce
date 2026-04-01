@@ -7,10 +7,12 @@ namespace Skinet.Api.Services;
 public class BasketRepository
 {
     private readonly IDatabase _db;
+    private readonly ILogger<BasketRepository> _logger;
 
-    public BasketRepository(IConnectionMultiplexer redis)
+    public BasketRepository(IConnectionMultiplexer redis, ILogger<BasketRepository> logger)
     {
         _db = redis.GetDatabase();
+        _logger = logger;
     }
 
     public async Task<CustomerBasket?> GetBasketAsync(string id)
@@ -22,7 +24,7 @@ public class BasketRepository
                 ? null
                 : JsonSerializer.Deserialize<CustomerBasket>(data!);
         }
-        catch { return null; }
+        catch (Exception ex) { _logger.LogError(ex, "Redis GetBasket failed for {Id}", id); return null; }
     }
 
     public async Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket basket)
@@ -35,12 +37,12 @@ public class BasketRepository
                 TimeSpan.FromDays(30));
             return created ? basket : null;
         }
-        catch { return null; }
+        catch (Exception ex) { _logger.LogError(ex, "Redis UpdateBasket failed for {Id}", basket.Id); return null; }
     }
 
     public async Task<bool> DeleteBasketAsync(string id)
     {
         try { return await _db.KeyDeleteAsync(id); }
-        catch { return false; }
+        catch (Exception ex) { _logger.LogError(ex, "Redis DeleteBasket failed for {Id}", id); return false; }
     }
 }
