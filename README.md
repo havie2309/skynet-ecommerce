@@ -2,6 +2,28 @@
 
 A full-stack flower e-commerce app built with ASP.NET Core and Angular. Customers can browse bouquets, manage a basket, place orders, and complete card payments with Stripe.
 
+## Screenshots
+
+### Home
+
+![Home page](docs/screenshots/home.png)
+
+### Catalog
+
+![Catalog page](docs/screenshots/catalog.png)
+
+### Florist Chat
+
+![Florist chat](docs/screenshots/chat-assistant.png)
+
+### Checkout
+
+![Checkout page](docs/screenshots/checkout.png)
+
+### Orders
+
+![Orders page](docs/screenshots/orders.png)
+
 ## Features
 
 - Browse products with filtering and pagination
@@ -172,28 +194,6 @@ dotnet build api/Skinet.Api.csproj
 cd client
 npm run build
 ```
-
-## Screenshots
-
-### Home
-
-![Home page](docs/screenshots/home.png)
-
-### Catalog
-
-![Catalog page](docs/screenshots/catalog.png)
-
-### Florist Chat
-
-![Florist chat](docs/screenshots/chat-assistant.png)
-
-### Checkout
-
-![Checkout page](docs/screenshots/checkout.png)
-
-### Orders
-
-![Orders page](docs/screenshots/orders.png)
 
 ## Notes
 
