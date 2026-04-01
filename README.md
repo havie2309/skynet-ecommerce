@@ -175,30 +175,25 @@ npm run build
 
 ## Screenshots
 
-Adding screenshots is a good idea, especially if you are showing the project on GitHub for hiring, school, or portfolio use.
-
-The most useful images to add are:
-
-- Home or product listing page
-- Product detail page
-- Basket page
-- Checkout page
-- Orders page
-- Admin dashboard if you want to show management features
-
-You can place them in a folder like `docs/screenshots/` and reference them in this README.
-
-## Recommended Screenshot Section
-
-Once you have images, add a section like this:
-
-```md
-## Screenshots
+### Home
 
 ![Home page](docs/screenshots/home.png)
-![Basket page](docs/screenshots/basket.png)
+
+### Catalog
+
+![Catalog page](docs/screenshots/catalog.png)
+
+### Florist Chat
+
+![Florist chat](docs/screenshots/chat-assistant.png)
+
+### Checkout
+
 ![Checkout page](docs/screenshots/checkout.png)
-```
+
+### Orders
+
+![Orders page](docs/screenshots/orders.png)
 
 ## Notes
 
