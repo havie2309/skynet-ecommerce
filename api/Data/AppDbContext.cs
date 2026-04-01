@@ -45,7 +45,7 @@ public class AppDbContext : DbContext
             new Product { Id = 2, Name = "Lavender Rose Bundle", Brand = "BloomHaus", Category = "Fresh Bouquets",
                 Description = "Twelve long-stem lavender roses wrapped in soft kraft paper with a satin ribbon.",
                 Price = 54.99m, StockQuantity = 25,
-                ImageUrl = "https://images.unsplash.com/photo-1548094990-c16ca90f1f0d?auto=format&fit=crop&w=800&q=80" },
+                ImageUrl = "https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=800&q=80" },
 
             new Product { Id = 3, Name = "Pastel Tulip Bunch", Brand = "PetalCo", Category = "Fresh Bouquets",
                 Description = "A cheerful mix of pink, peach and cream tulips bundled in a cloud of baby's breath.",
