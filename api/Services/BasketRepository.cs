@@ -15,23 +15,32 @@ public class BasketRepository
 
     public async Task<CustomerBasket?> GetBasketAsync(string id)
     {
-        var data = await _db.StringGetAsync(id);
-        return data.IsNullOrEmpty 
-            ? null 
-            : JsonSerializer.Deserialize<CustomerBasket>(data!);
+        try
+        {
+            var data = await _db.StringGetAsync(id);
+            return data.IsNullOrEmpty
+                ? null
+                : JsonSerializer.Deserialize<CustomerBasket>(data!);
+        }
+        catch { return null; }
     }
 
     public async Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket basket)
     {
-        var created = await _db.StringSetAsync(
-            basket.Id,
-            JsonSerializer.Serialize(basket),
-            TimeSpan.FromDays(30));
-        return created ? basket : null;
+        try
+        {
+            var created = await _db.StringSetAsync(
+                basket.Id,
+                JsonSerializer.Serialize(basket),
+                TimeSpan.FromDays(30));
+            return created ? basket : null;
+        }
+        catch { return null; }
     }
 
     public async Task<bool> DeleteBasketAsync(string id)
     {
-        return await _db.KeyDeleteAsync(id);
+        try { return await _db.KeyDeleteAsync(id); }
+        catch { return false; }
     }
 }
