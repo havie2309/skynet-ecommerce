@@ -4,6 +4,10 @@ A full-stack flower e-commerce app built with ASP.NET Core and Angular. Customer
 
 ## Screenshots
 
+## Live Demo
+
+- Frontend: [https://snoopypetal.netlify.app](https://snoopypetal.netlify.app)
+
 ### Home
 
 ![Home page](docs/screenshots/home.png)
@@ -161,7 +165,7 @@ Important production environment variables include:
 
 ### Netlify
 
-The frontend is deployed from the Angular app. If your frontend build points to the Render API, make sure the production API URL is correct in the Angular environment configuration or injected through your deployment setup.
+The frontend is deployed from the Angular app at [https://snoopypetal.netlify.app](https://snoopypetal.netlify.app). If your frontend build points to the Render API, make sure the production API URL is correct in the Angular environment configuration or injected through your deployment setup.
 
 ## API Overview
 
